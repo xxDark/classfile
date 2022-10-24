@@ -9,6 +9,11 @@ import java.io.IOException;
  */
 public interface ContextCodec<T, D_CTX, E_CTX> extends ContextDecoder<T, D_CTX>, ContextEncoder<T, E_CTX> {
 
+    /**
+     * @param decoder Decoder.
+     * @param encoder Encoder.
+     * @return Composed codec.
+     */
     static <T, D_CTX, E_CTX> ContextCodec<T, D_CTX, E_CTX> of(ContextDecoder<T, D_CTX> decoder, ContextEncoder<T, E_CTX> encoder) {
         return new ContextCodec<T, D_CTX, E_CTX>() {
             @Override

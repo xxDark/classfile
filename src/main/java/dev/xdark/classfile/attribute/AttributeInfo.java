@@ -12,7 +12,9 @@ import static dev.xdark.classfile.attribute.AttributeLocation.*;
 import static dev.xdark.classfile.attribute.KnownInfo.kinfo;
 
 /**
- * Attribute type.
+ * Attribute info.
+ *
+ * @author xDark
  */
 public final class AttributeInfo<T extends Attribute<T>> {
 

@@ -4,6 +4,8 @@ import java.util.Collection;
 
 /**
  * Collects attributes into collection.
+ *
+ * @author xDark
  */
 public final class AttributeCollector implements AttributeVisitor {
 

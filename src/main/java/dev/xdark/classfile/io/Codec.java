@@ -10,6 +10,11 @@ import java.io.IOException;
  */
 public interface Codec<T> extends Decoder<T>, Encoder<T> {
 
+    /**
+     * Makes this codec context-aware, ignoring
+     * the actual context.
+     * @return Composed codec.
+     */
     default <D_CTX, E_CTX> ContextCodec<T, D_CTX, E_CTX> asContextAware() {
         return new ContextCodec<T, D_CTX, E_CTX>() {
             @Override
@@ -24,6 +29,11 @@ public interface Codec<T> extends Decoder<T>, Encoder<T> {
         };
     }
 
+    /**
+     * @param decoder Decoder.
+     * @param encoder Encoder.
+     * @return Composed codec.
+     */
     static <T> Codec<T> of(Decoder<T> decoder, Encoder<T> encoder) {
         return new Codec<T>() {
             @Override
@@ -38,6 +48,12 @@ public interface Codec<T> extends Decoder<T>, Encoder<T> {
         };
     }
 
+    /**
+     * Codec for singleton value.
+     *
+     * @param instance Singleton instance.
+     * @return New codec.
+     */
     static <T> Codec<T> singleton(T instance) {
         return new Codec<T>() {
             @Override
