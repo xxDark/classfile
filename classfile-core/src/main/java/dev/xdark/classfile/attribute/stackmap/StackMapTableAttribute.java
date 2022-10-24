@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute.stackmap;
 
 import dev.xdark.classfile.attribute.Attribute;
 import dev.xdark.classfile.attribute.AttributeInfo;
+import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrame;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrameType;
 import dev.xdark.classfile.io.Codec;
@@ -24,7 +25,11 @@ public final class StackMapTableAttribute implements Attribute<StackMapTableAttr
             int position = input.position();
             int type = input.readUnsignedByte();
             input.position(position);
-            StackMapFrame<?> frame = StackMapFrameType.of(type).codec().read(input);
+            StackMapFrameType<?> frameType = StackMapFrameType.of(type);
+            if (frameType == null) {
+                throw new InvalidAttributeException("Unknown frame type " + type);
+            }
+            StackMapFrame<?> frame = frameType.codec().read(input);
             frames.add(frame);
         }
         return new StackMapTableAttribute(frames);

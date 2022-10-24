@@ -1,7 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.AttributeVisitor;
-import dev.xdark.classfile.constantpool.ConstantPool;
+import dev.xdark.classfile.constantpool.ConstantPoolVisitor;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -11,18 +11,33 @@ import org.jetbrains.annotations.Nullable;
  * Class visitor.
  *
  * @author xDark
+ * @apiNote Some classes may call methods out of order,
+ * for example, some class may call {@link ClassVisitor#visitMethod(AccessFlag, int, int)} or any other method
+ * before calling {@link ClassVisitor#visit(ClassVersion, AccessFlag, int, int, int[])}.
  */
 public interface ClassVisitor {
 
     /**
-     * @param version      Class version.
-     * @param constantPool Constant pool.
-     * @param access       Access flags.
-     * @param thisClass    Class name index.
-     * @param superClass   Super name index.
-     * @param interfaces   Interface name indices.
+     * Called before this class is visited.
      */
-    void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces);
+    void visitClass();
+
+    /**
+     * Visits constant pool.
+     *
+     * @return Constant pool visitor or {@code null},
+     * if constant pool can be skipped.
+     */
+    @Nullable ConstantPoolVisitor visitConstantPool();
+
+    /**
+     * @param version    Class version.
+     * @param access     Access flags.
+     * @param thisClass  Class name index.
+     * @param superClass Super name index.
+     * @param interfaces Interface name indices.
+     */
+    void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces);
 
     /**
      * Visits new field.

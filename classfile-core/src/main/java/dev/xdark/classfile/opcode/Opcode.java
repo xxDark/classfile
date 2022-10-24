@@ -243,11 +243,10 @@ public final class Opcode<T extends Instruction<T>> {
     @Nullable
     public static <T extends Instruction<T>> Opcode<T> of(int n) {
         Opcode<?>[] opcodes;
-        Opcode<?> h;
-        if (n < 0 || n >= (opcodes = ALL_OPCODES).length || (h = opcodes[n]) == null) {
+        if (n < 0 || n >= (opcodes = ALL_OPCODES).length) {
             return null;
         }
-        return (Opcode<T>) h;
+        return (Opcode<T>) opcodes[n];
     }
 
     /**

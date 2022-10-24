@@ -2,9 +2,11 @@ package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.ConstantPool;
+import dev.xdark.classfile.constantpool.ConstantPoolVisitor;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class visitor that forwards to another visitor.
@@ -12,9 +14,10 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public class FilterClassVisitor implements ClassVisitor {
+    @Nullable
     protected ClassVisitor cv;
 
-    public FilterClassVisitor(ClassVisitor cv) {
+    public FilterClassVisitor(@Nullable ClassVisitor cv) {
         this.cv = cv;
     }
 
@@ -22,10 +25,24 @@ public class FilterClassVisitor implements ClassVisitor {
     }
 
     @Override
-    public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+    public void visitClass() {
         ClassVisitor cv = this.cv;
         if (cv != null) {
-            cv.visit(version, constantPool, access, thisClass, superClass, interfaces);
+            cv.visitClass();
+        }
+    }
+
+    @Override
+    public ConstantPoolVisitor visitConstantPool() {
+        ClassVisitor cv = this.cv;
+        return cv == null ? null : cv.visitConstantPool();
+    }
+
+    @Override
+    public void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+        ClassVisitor cv = this.cv;
+        if (cv != null) {
+            cv.visit(version, access, thisClass, superClass, interfaces);
         }
     }
 

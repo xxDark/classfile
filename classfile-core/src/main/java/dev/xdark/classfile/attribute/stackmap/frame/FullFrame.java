@@ -80,7 +80,7 @@ public final class FullFrame extends StackMapFrame<FullFrame> {
 
     @Override
     public int getType() {
-        return FrameTypeRange.FULL_FRAME.getFrom();
+        return FrameTypeRange.FULL_FRAME.exact();
     }
 
     @Override

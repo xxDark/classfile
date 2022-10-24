@@ -2,6 +2,8 @@ package dev.xdark.classfile.constantpool;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
+
 /**
  * Constant pool.
  *
@@ -29,4 +31,8 @@ public interface ConstantPool extends Iterable<ConstantEntry<?>> {
      * @return Constant pool size.
      */
     int size();
+
+    @NotNull
+    @Override
+    Iterator<@NotNull ConstantEntry<?>> iterator();
 }

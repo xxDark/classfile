@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Attribute visitor that forwards to another visitor.
@@ -8,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public abstract class FilterAttributeVisitor implements AttributeVisitor {
-
+    @Nullable
     protected AttributeVisitor av;
 
-    protected FilterAttributeVisitor(AttributeVisitor av) {
+    protected FilterAttributeVisitor(@Nullable AttributeVisitor av) {
         this.av = av;
     }
 

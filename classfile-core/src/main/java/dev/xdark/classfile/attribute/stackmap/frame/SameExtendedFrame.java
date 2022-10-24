@@ -29,7 +29,7 @@ public final class SameExtendedFrame extends StackMapFrame<SameExtendedFrame> {
 
     @Override
     public int getType() {
-        return FrameTypeRange.SAME_FRAME_EXTENDED.getFrom();
+        return FrameTypeRange.SAME_FRAME_EXTENDED.exact();
     }
 
     @Override

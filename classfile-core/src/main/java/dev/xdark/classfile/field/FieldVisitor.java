@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
  * Field visitor.
  *
  * @author xDark
+ * for example, some class may call {@link FieldVisitor#visitAttributes()} or any other method
+ * before calling {@link FieldVisitor#visit(AccessFlag, int, int)}.
  */
 public interface FieldVisitor {
 

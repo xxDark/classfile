@@ -46,4 +46,22 @@ public final class ConstantethodHandle implements ConstantEntry<ConstantethodHan
     public @NotNull Tag<ConstantethodHandle> tag() {
         return Tag.CONSTANT_MethodHandle;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantethodHandle that = (ConstantethodHandle) o;
+
+        if (referenceKind != that.referenceKind) return false;
+        return referenceIndex == that.referenceIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = referenceKind;
+        result = 31 * result + referenceIndex;
+        return result;
+    }
 }

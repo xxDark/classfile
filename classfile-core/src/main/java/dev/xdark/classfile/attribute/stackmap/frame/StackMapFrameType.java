@@ -1,6 +1,8 @@
 package dev.xdark.classfile.attribute.stackmap.frame;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,10 @@ public final class StackMapFrameType<T extends StackMapFrame<T>> {
 
     /**
      * @param type Type.
-     * @return Frame type.
-     * @throws IllegalArgumentException If frame type is invalid.
+     * @return Frame type or {@code null},
+     * if not found.
      */
+    @Nullable
     public static <T extends StackMapFrame<T>> StackMapFrameType<T> of(int type) {
         List<StackMapFrameType<?>> types = ALL_TYPES;
         for (int i = 0, j = types.size(); i < j; i++) {
@@ -41,12 +44,13 @@ public final class StackMapFrameType<T extends StackMapFrame<T>> {
                 return (StackMapFrameType<T>) frameType;
             }
         }
-        throw new IllegalArgumentException(Integer.toString(type));
+        return null;
     }
 
     /**
      * @return Type range.
      */
+    @NotNull
     public FrameTypeRange range() {
         return range;
     }
@@ -58,6 +62,7 @@ public final class StackMapFrameType<T extends StackMapFrame<T>> {
      * set position back after frame type has been read.
      * The codecs will also write frame tag back on it's own as well.
      */
+    @NotNull
     public Codec<T> codec() {
         return codec;
     }

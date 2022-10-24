@@ -3,6 +3,7 @@ package dev.xdark.classfile.method;
 import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Method visitor that forwards to another visitor.
@@ -10,9 +11,10 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public class FilterMethodVisitor implements MethodVisitor {
+    @Nullable
     protected MethodVisitor mv;
 
-    public FilterMethodVisitor(MethodVisitor mv) {
+    public FilterMethodVisitor(@Nullable MethodVisitor mv) {
         this.mv = mv;
     }
 

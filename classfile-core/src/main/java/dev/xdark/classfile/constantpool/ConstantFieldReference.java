@@ -46,4 +46,22 @@ public final class ConstantFieldReference implements ConstantEntry<ConstantField
     public @NotNull Tag<ConstantFieldReference> tag() {
         return Tag.CONSTANT_Fieldref;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantFieldReference that = (ConstantFieldReference) o;
+
+        if (classIndex != that.classIndex) return false;
+        return nameAndTypeIndex == that.nameAndTypeIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = classIndex;
+        result = 31 * result + nameAndTypeIndex;
+        return result;
+    }
 }

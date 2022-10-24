@@ -20,7 +20,7 @@ public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8>, ValueEnt
     /**
      * @param value UTF-8 value.
      */
-    public ConstantUtf8(String value) {
+    public ConstantUtf8(@NotNull String value) {
         this.value = value;
     }
 
@@ -39,5 +39,20 @@ public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8>, ValueEnt
     @Override
     public @NotNull Tag<ConstantUtf8> tag() {
         return Tag.CONSTANT_Utf8;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantUtf8 that = (ConstantUtf8) o;
+
+        return value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
     }
 }

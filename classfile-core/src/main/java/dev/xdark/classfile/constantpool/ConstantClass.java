@@ -35,4 +35,19 @@ public final class ConstantClass implements ConstantEntry<ConstantClass> {
     public @NotNull Tag<ConstantClass> tag() {
         return Tag.CONSTANT_Class;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantClass that = (ConstantClass) o;
+
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
 }

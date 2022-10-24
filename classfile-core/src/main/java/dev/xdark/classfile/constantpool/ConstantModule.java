@@ -35,4 +35,19 @@ public final class ConstantModule implements ConstantEntry<ConstantModule> {
     public @NotNull Tag<ConstantModule> tag() {
         return Tag.CONSTANT_Module;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantModule that = (ConstantModule) o;
+
+        return nameIndex == that.nameIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return nameIndex;
+    }
 }

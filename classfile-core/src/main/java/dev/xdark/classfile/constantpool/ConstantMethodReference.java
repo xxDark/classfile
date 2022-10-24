@@ -46,4 +46,22 @@ public final class ConstantMethodReference implements ConstantEntry<ConstantMeth
     public @NotNull Tag<ConstantMethodReference> tag() {
         return Tag.CONSTANT_Methodref;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantMethodReference that = (ConstantMethodReference) o;
+
+        if (classIndex != that.classIndex) return false;
+        return nameAndTypeIndex == that.nameAndTypeIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = classIndex;
+        result = 31 * result + nameAndTypeIndex;
+        return result;
+    }
 }

@@ -7,24 +7,15 @@ import java.io.IOException;
  *
  * @author xDark
  */
-public final class InvalidClassException extends IOException {
+public class InvalidClassException extends IOException {
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidClassException() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidClassException(String message) {
         super(message);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidClassException(String message, Throwable cause) {
         super(message, cause);
     }

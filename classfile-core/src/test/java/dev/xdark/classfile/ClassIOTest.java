@@ -1,8 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.*;
-import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.constantpool.Tag;
+import dev.xdark.classfile.constantpool.*;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.field.FilterFieldVisitor;
 import dev.xdark.classfile.io.ContextCodec;
@@ -45,10 +44,23 @@ public class ClassIOTest {
             }
             buffer.flip();
             ClassIO.read(new ByteBufferInput(buffer), new FilterClassVisitor() {
+                private ConstantPool constantPool;
                 private ClassContext classContext;
 
                 @Override
-                public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+                public ConstantPoolVisitor visitConstantPool() {
+                    ConstantPoolBuilder builder = new ConstantPoolBuilder();
+                    return new FilterConstantPoolVisitor(builder) {
+                        @Override
+                        public void visitEnd() {
+                            constantPool = builder.build();
+                        }
+                    };
+                }
+
+                @Override
+                public void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+                    ConstantPool constantPool = this.constantPool;
                     assertEquals(ClassIO.getClassName(constantPool, thisClass), internalName);
                     if (superClass != 0) {
                         assertEquals(ClassIO.getClassName(constantPool, superClass), c.getSuperclass().getName().replace('.', '/'));
@@ -58,12 +70,14 @@ public class ClassIOTest {
 
                 @Override
                 public AttributeVisitor visitAttributes() {
-                    return new AttributeVerifier(super.visitAttributes(), classContext);
+                    AttributeVisitor av = super.visitAttributes();
+                    return new AttributeVerifier(av, classContext);
                 }
 
                 @Override
                 public MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
-                    return new FilterMethodVisitor(super.visitMethod(access, nameIndex, descriptorIndex)) {
+                    MethodVisitor mv = super.visitMethod(access, nameIndex, descriptorIndex);
+                    return new FilterMethodVisitor(mv) {
                         @Override
                         public AttributeVisitor visitAttributes() {
                             return new AttributeVerifier(super.visitAttributes(), classContext);
@@ -73,7 +87,8 @@ public class ClassIOTest {
 
                 @Override
                 public FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
-                    return new FilterFieldVisitor(super.visitField(access, nameIndex, descriptorIndex)) {
+                    FieldVisitor fv = super.visitField(access, nameIndex, descriptorIndex);
+                    return new FilterFieldVisitor(fv) {
                         @Override
                         public AttributeVisitor visitAttributes() {
                             return new AttributeVerifier(super.visitAttributes(), classContext);
@@ -84,8 +99,9 @@ public class ClassIOTest {
             assertFalse(buffer.hasRemaining());
             buffer.flip();
             ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);
-            ClassWriter writer = new ClassWriter(output);
+            ClassWriter writer = new ClassWriter();
             ClassIO.read(new ByteBufferInput(buffer.slice()), writer);
+            writer.writeTo(output);
             ByteBuffer result = output.consume();
             assertEquals(buffer, result);
         }

@@ -4,13 +4,11 @@ import dev.xdark.classfile.attribute.AttributeIO;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.*;
 import dev.xdark.classfile.field.FieldVisitor;
-import dev.xdark.classfile.method.MethodVisitor;
 import dev.xdark.classfile.io.Input;
+import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class IO.
@@ -38,23 +36,24 @@ public class ClassIO {
         if (version == null) {
             throw new InvalidClassException("Invalid or unsupported class version (major: " + major + ", minor: " + minor + ")");
         }
-        int constantPoolCount = input.readUnsignedShort();
-        List<ConstantEntry<?>> entries = new ArrayList<>(constantPoolCount + 1);
-        entries.add(null);
-        for (int i = 1; i < constantPoolCount; i++) {
-            int tagId = input.readUnsignedByte();
-            Tag<?> tag = Tag.of(tagId);
-            if (tag == null) {
-                throw new InvalidClassException("Unknown tag " + tagId);
+        ConstantPoolBuilder builder = new ConstantPoolBuilder();
+        classVisitor.visitClass();
+        // We capture constant pool here for attributes.
+        ConstantPoolVisitor constantPoolVisitor = classVisitor.visitConstantPool();
+        ConstantPoolIO.read(input, new FilterConstantPoolVisitor(constantPoolVisitor) {
+            @Override
+            public void visitConstants() {
+                super.visitConstants();
+                builder.visitConstants();
             }
-            ConstantEntry<?> entry = tag.codec().read(input);
-            entries.add(entry);
-            if (tag.size() == 2) {
-                entries.add(null);
-                i++;
+
+            @Override
+            public void visitConstant(@NotNull ConstantEntry<?> entry) {
+                super.visitConstant(entry);
+                builder.visitConstant(entry);
             }
-        }
-        ConstantPool constantPool = new BuiltConstantPool(entries);
+        });
+        ConstantPool constantPool = builder.build();
         {
             AccessFlag flag = AccessFlag.flag(input.readUnsignedShort());
             int thisClass = input.readUnsignedShort();
@@ -63,8 +62,10 @@ public class ClassIO {
             for (int i = 0, j = interfaces.length; i < j; i++) {
                 interfaces[i] = input.readUnsignedShort();
             }
-            classVisitor.visit(version, constantPool, flag, thisClass, superClass, interfaces);
+            classVisitor.visit(version, flag, thisClass, superClass, interfaces);
         }
+        // Even though the visitor might've modified underlying constant pool,
+        // we will still use it. Attributes are still unchanged.
         ClassContext classContext = new ClassContext(version, constantPool);
         for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
             AccessFlag flag = AccessFlag.flag(input.readUnsignedShort());

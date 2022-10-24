@@ -46,4 +46,22 @@ public final class ConstantInvokeDynamic implements ConstantEntry<ConstantInvoke
     public @NotNull Tag<ConstantInvokeDynamic> tag() {
         return Tag.CONSTANT_InvokeDynamic;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantInvokeDynamic that = (ConstantInvokeDynamic) o;
+
+        if (bootstrapMethodIndex != that.bootstrapMethodIndex) return false;
+        return nameAndTypeIndex == that.nameAndTypeIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bootstrapMethodIndex;
+        result = 31 * result + nameAndTypeIndex;
+        return result;
+    }
 }

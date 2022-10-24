@@ -35,4 +35,19 @@ public final class ConstantPackage implements ConstantEntry<ConstantPackage> {
     public @NotNull Tag<ConstantPackage> tag() {
         return Tag.CONSTANT_Package;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantPackage that = (ConstantPackage) o;
+
+        return nameIndex == that.nameIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return nameIndex;
+    }
 }

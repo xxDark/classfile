@@ -46,4 +46,22 @@ public final class ConstantInterfaceMethodReference implements ConstantEntry<Con
     public @NotNull Tag<ConstantInterfaceMethodReference> tag() {
         return Tag.CONSTANT_InterfaceMethodref;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantInterfaceMethodReference that = (ConstantInterfaceMethodReference) o;
+
+        if (classIndex != that.classIndex) return false;
+        return nameAndTypeIndex == that.nameAndTypeIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = classIndex;
+        result = 31 * result + nameAndTypeIndex;
+        return result;
+    }
 }

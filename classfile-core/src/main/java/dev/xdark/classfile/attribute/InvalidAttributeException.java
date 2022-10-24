@@ -1,30 +1,21 @@
 package dev.xdark.classfile.attribute;
 
-import java.io.IOException;
+import dev.xdark.classfile.InvalidClassException;
 
 /**
  * Thrown when known attribute contains invalid data.
  *
  * @author xDark
  */
-public final class InvalidAttributeException extends IOException {
+public final class InvalidAttributeException extends InvalidClassException {
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidAttributeException() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidAttributeException(String message) {
         super(message);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public InvalidAttributeException(String message, Throwable cause) {
         super(message, cause);
     }

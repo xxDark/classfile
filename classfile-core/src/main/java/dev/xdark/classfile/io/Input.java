@@ -17,6 +17,11 @@ public interface Input extends Seekable, DataInput {
     byte[] read(int length) throws IOException;
 
     /**
+     * @return Whether the EOF was reached.
+     */
+    boolean hasRemaining();
+
+    /**
      * {@inheritDoc}
      */
     @Override

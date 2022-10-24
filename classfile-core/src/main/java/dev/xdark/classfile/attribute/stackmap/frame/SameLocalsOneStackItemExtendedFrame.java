@@ -49,7 +49,7 @@ public final class SameLocalsOneStackItemExtendedFrame extends StackMapFrame<Sam
 
     @Override
     public int getType() {
-        return FrameTypeRange.SAME_LOCALS_1_STACK_ITEM_EXTENDED.getFrom();
+        return FrameTypeRange.SAME_LOCALS_1_STACK_ITEM_EXTENDED.exact();
     }
 
     @Override

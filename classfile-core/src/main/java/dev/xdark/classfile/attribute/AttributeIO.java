@@ -9,6 +9,7 @@ import dev.xdark.classfile.io.Output;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Attribute IO.
@@ -56,6 +57,33 @@ public final class AttributeIO {
             visitor.visitAttribute(nameIndex, attribute);
         }
         visitor.visitEnd();
+    }
+
+    /**
+     * Writes a collection of attributes.
+     *
+     * @param output       Output to write attributes to.
+     * @param attributes   Attributes to write.
+     * @param classContext Class context.
+     * @throws IOException If any I/O error occurs.
+     */
+    public static void write(@NotNull Output output, @NotNull Collection<NamedAttributeInstance<?>> attributes, @NotNull ClassContext classContext) throws IOException {
+        output.writeShort(attributes.size());
+        for (NamedAttributeInstance<?> attribute : attributes) {
+            write(output, attribute, classContext);
+        }
+    }
+
+    /**
+     * Writes an attribute.
+     *
+     * @param output         Output to write attribute to.
+     * @param namedAttribute Attribute with index.
+     * @param classContext   Class context.
+     * @throws IOException If any I/O error occurs.
+     */
+    public static void write(@NotNull Output output, @NotNull NamedAttributeInstance<?> namedAttribute, @NotNull ClassContext classContext) throws IOException {
+        write(output, namedAttribute.getNameIndex(), classContext, namedAttribute.getAttribute());
     }
 
     /**

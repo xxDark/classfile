@@ -40,4 +40,19 @@ public final class ConstantInteger implements ConstantEntry<ConstantInteger>, Va
     public @NotNull Tag<ConstantInteger> tag() {
         return Tag.CONSTANT_Integer;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantInteger that = (ConstantInteger) o;
+
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
 }

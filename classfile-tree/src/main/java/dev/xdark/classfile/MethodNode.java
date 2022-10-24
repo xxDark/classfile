@@ -2,6 +2,7 @@ package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.*;
 import dev.xdark.classfile.constantpool.ConstantPool;
+import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.constantpool.Tag;
 import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class MethodNode implements MethodVisitor {
     /**
      * Method attributes.
      */
-    public final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
+    public final List<UnknownStoredAttribute> attributes = new ArrayList<>();
     private ConstantPool constantPool;
 
     /**
@@ -61,12 +62,13 @@ public class MethodNode implements MethodVisitor {
     }
 
     @Override
-    public @Nullable AttributeVisitor visitAttributes() {
-        return new FilterAttributeVisitor(new AttributeCollector(attributes)) {
+    public @NotNull AttributeVisitor visitAttributes() {
+        return new FilterAttributeVisitor(new UnknownAttributeCollector(Objects.requireNonNull(constantPool), attributes)) {
             @Override
             public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
                 if (attribute instanceof SignatureAttribute) {
                     signature = constantPool.get(((SignatureAttribute) attribute).getIndex(), Tag.CONSTANT_Utf8).value();
+                    return;
                 }
                 super.visitAttribute(nameIndex, attribute);
             }
@@ -77,5 +79,18 @@ public class MethodNode implements MethodVisitor {
     public void visitEnd() {
         constantPool = null; // This releases the reference to the ConstantPool
         // passed by ClassNode.
+    }
+
+    public void accept(MethodVisitor methodVisitor, ConstantPoolBuilder builder) {
+        AttributeVisitor attributeVisitor = methodVisitor.visitAttributes();
+        if (attributeVisitor != null) {
+            attributeVisitor.visitAttributes();
+            NodeUtil.putSignature(attributeVisitor, builder, signature);
+            List<UnknownStoredAttribute> attributes = this.attributes;
+            for (UnknownStoredAttribute attribute : attributes) {
+                attributeVisitor.visitAttribute(builder.putUtf8(attribute.getName()), attribute.getAttribute());
+            }
+            attributeVisitor.visitEnd();
+        }
     }
 }

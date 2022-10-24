@@ -37,6 +37,18 @@ public final class FrameTypeRange {
     }
 
     /**
+     * @return Exact value.
+     * @throws IllegalStateException if range contains more than 1 value.
+     */
+    public int exact() {
+        int from = this.from;
+        if (from != to) {
+            throw new IllegalStateException();
+        }
+        return from;
+    }
+
+    /**
      * @param tag Tag to check.
      * @return Whether this tag is in range.
      */

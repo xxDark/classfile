@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute.code;
 
 import dev.xdark.classfile.opcode.Instruction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Instruction visitor that forwards to another visitor.
@@ -9,9 +10,10 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public class FilterInstructionVisitor implements InstructionVisitor {
+    @Nullable
     protected InstructionVisitor cv;
 
-    public FilterInstructionVisitor(InstructionVisitor cv) {
+    public FilterInstructionVisitor(@Nullable InstructionVisitor cv) {
         this.cv = cv;
     }
 

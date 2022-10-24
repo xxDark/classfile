@@ -1,8 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.*;
-import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.constantpool.Tag;
+import dev.xdark.classfile.constantpool.*;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class node.
@@ -57,12 +57,26 @@ public class ClassNode implements ClassVisitor {
     /**
      * Class attributes.
      */
-    public final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
+    public final List<UnknownStoredAttribute> attributes = new ArrayList<>();
 
     @Override
-    public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+    public void visitClass() {
+    }
+
+    @Override
+    public ConstantPoolVisitor visitConstantPool() {
+        ConstantPoolBuilder builder = new ConstantPoolBuilder();
+        return new FilterConstantPoolVisitor(builder) {
+            @Override
+            public void visitEnd() {
+                constantPool = builder.build();
+            }
+        };
+    }
+
+    @Override
+    public void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
         this.version = version;
-        this.constantPool = constantPool;
         this.access = access;
         // TODO make utilities
         name = ClassIO.getClassName(constantPool, thisClass).replace('/', '.');
@@ -93,12 +107,13 @@ public class ClassNode implements ClassVisitor {
     }
 
     @Override
-    public @Nullable AttributeVisitor visitAttributes() {
-        return new FilterAttributeVisitor(new AttributeCollector(attributes)) {
+    public @NotNull AttributeVisitor visitAttributes() {
+        return new FilterAttributeVisitor(new UnknownAttributeCollector(Objects.requireNonNull(constantPool), attributes)) {
             @Override
             public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
                 if (attribute instanceof SignatureAttribute) {
                     signature = constantPool.get(((SignatureAttribute) attribute).getIndex(), Tag.CONSTANT_Utf8).value();
+                    return;
                 }
                 super.visitAttribute(nameIndex, attribute);
             }
@@ -107,5 +122,43 @@ public class ClassNode implements ClassVisitor {
 
     @Override
     public void visitEnd() {
+    }
+
+    public void accept(ClassVisitor classVisitor) {
+        classVisitor.visitClass();
+        ConstantPoolVisitor visitor = classVisitor.visitConstantPool();
+        ConstantPoolBuilder builder = new ConstantPoolBuilder();
+        int thisClas = builder.putClass(name);
+        String superName = this.superName;
+        int superClass = superName == null ? 0 : builder.putClass(superName);
+        int[] interfaces = this.interfaces.stream().mapToInt(builder::putClass).toArray();
+        classVisitor.visit(version, access, thisClas, superClass, interfaces);
+        for (MethodNode method : methods) {
+            MethodVisitor mv = classVisitor.visitMethod(method.access, builder.putUtf8(name), builder.putUtf8(method.desc));
+            if (mv != null) {
+                method.accept(mv, builder);
+            }
+        }
+        for (FieldNode field : fields) {
+            FieldVisitor fv = classVisitor.visitField(field.access, builder.putUtf8(name), builder.putUtf8(field.desc));
+            if (fv != null) {
+                field.accept(fv, builder);
+            }
+        }
+        AttributeVisitor attributeVisitor = classVisitor.visitAttributes();
+        if (attributeVisitor != null) {
+            attributeVisitor.visitAttributes();
+            NodeUtil.putSignature(attributeVisitor, builder, signature);
+            List<UnknownStoredAttribute> attributes = this.attributes;
+            for (UnknownStoredAttribute attribute : attributes) {
+                attributeVisitor.visitAttribute(builder.putUtf8(attribute.getName()), attribute.getAttribute());
+            }
+            attributeVisitor.visitEnd();
+        }
+        if (visitor != null) {
+            for (ConstantEntry<?> entry : builder.build()) {
+                visitor.visitConstant(entry);
+            }
+        }
     }
 }

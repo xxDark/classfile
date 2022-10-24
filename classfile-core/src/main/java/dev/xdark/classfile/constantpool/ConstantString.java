@@ -35,4 +35,19 @@ public final class ConstantString implements ConstantEntry<ConstantString> {
     public @NotNull Tag<ConstantString> tag() {
         return Tag.CONSTANT_String;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantString that = (ConstantString) o;
+
+        return index == that.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return index;
+    }
 }

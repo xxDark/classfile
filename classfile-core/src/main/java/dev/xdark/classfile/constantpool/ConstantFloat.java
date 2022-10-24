@@ -40,4 +40,19 @@ public final class ConstantFloat implements ConstantEntry<ConstantFloat>, ValueE
     public @NotNull Tag<ConstantFloat> tag() {
         return Tag.CONSTANT_Float;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantFloat that = (ConstantFloat) o;
+
+        return Float.compare(that.value, value) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(value);
+    }
 }

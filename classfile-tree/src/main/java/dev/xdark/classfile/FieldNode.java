@@ -3,6 +3,7 @@ package dev.xdark.classfile;
 import dev.xdark.classfile.attribute.*;
 import dev.xdark.classfile.constantpool.*;
 import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +40,7 @@ public class FieldNode implements FieldVisitor {
     /**
      * Field attributes.
      */
-    public final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
+    public final List<UnknownStoredAttribute> attributes = new ArrayList<>();
     private ConstantPool constantPool;
 
     /**
@@ -65,11 +66,12 @@ public class FieldNode implements FieldVisitor {
 
     @Override
     public @Nullable AttributeVisitor visitAttributes() {
-        return new FilterAttributeVisitor(new AttributeCollector(attributes)) {
+        return new FilterAttributeVisitor(new UnknownAttributeCollector(Objects.requireNonNull(constantPool), attributes)) {
             @Override
             public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
                 if (attribute instanceof SignatureAttribute) {
                     signature = constantPool.get(((SignatureAttribute) attribute).getIndex(), Tag.CONSTANT_Utf8).value();
+                    return;
                 } else if (attribute instanceof ConstantValueAttribute) {
                     ConstantEntry<?> entry = constantPool.get(((ConstantValueAttribute) attribute).getIndex());
                     // This is where it gets... tricky.
@@ -83,9 +85,11 @@ public class FieldNode implements FieldVisitor {
                     if (entry instanceof ValueEntry) {
                         if (!(entry instanceof ConstantUtf8)) {
                             constantValue = ((ValueEntry<?>) entry).getValue();
+                            return;
                         }
                     } else if (entry instanceof ConstantString) {
                         constantValue = constantPool.get(((ConstantString) entry).index(), Tag.CONSTANT_Utf8).value();
+                        return;
                     }
                 }
                 super.visitAttribute(nameIndex, attribute);
@@ -97,5 +101,18 @@ public class FieldNode implements FieldVisitor {
     public void visitEnd() {
         constantPool = null; // This releases the reference to the ConstantPool
         // passed by ClassNode.
+    }
+
+    public void accept(FieldVisitor fieldVisitor, ConstantPoolBuilder builder) {
+        fieldVisitor.visit(access, builder.putUtf8(name), builder.putUtf8(desc));
+        AttributeVisitor attributeVisitor = fieldVisitor.visitAttributes();
+        if (attributeVisitor != null) {
+            NodeUtil.putSignature(attributeVisitor, builder, signature);
+            List<UnknownStoredAttribute> attributes = this.attributes;
+            for (UnknownStoredAttribute attribute : attributes) {
+                attributeVisitor.visitAttribute(builder.putUtf8(attribute.getName()), attribute.getAttribute());
+            }
+            attributeVisitor.visitEnd();
+        }
     }
 }

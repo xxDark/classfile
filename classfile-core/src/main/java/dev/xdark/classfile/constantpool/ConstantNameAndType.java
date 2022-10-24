@@ -46,4 +46,22 @@ public final class ConstantNameAndType implements ConstantEntry<ConstantNameAndT
     public @NotNull Tag<ConstantNameAndType> tag() {
         return Tag.CONSTANT_NameAndType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantNameAndType that = (ConstantNameAndType) o;
+
+        if (nameIndex != that.nameIndex) return false;
+        return typeIndex == that.typeIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = nameIndex;
+        result = 31 * result + typeIndex;
+        return result;
+    }
 }

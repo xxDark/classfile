@@ -34,4 +34,19 @@ public final class ConstantMethodType implements ConstantEntry<ConstantMethodTyp
     public @NotNull Tag<ConstantMethodType> tag() {
         return Tag.CONSTANT_MethodType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantMethodType that = (ConstantMethodType) o;
+
+        return descriptorIndex == that.descriptorIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return descriptorIndex;
+    }
 }

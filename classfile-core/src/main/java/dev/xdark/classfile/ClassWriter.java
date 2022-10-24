@@ -1,17 +1,21 @@
 package dev.xdark.classfile;
 
+import dev.xdark.classfile.attribute.AttributeCollector;
+import dev.xdark.classfile.attribute.AttributeIO;
 import dev.xdark.classfile.attribute.AttributeVisitor;
-import dev.xdark.classfile.constantpool.ConstantEntry;
+import dev.xdark.classfile.attribute.NamedAttributeInstance;
 import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.constantpool.Tag;
+import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
+import dev.xdark.classfile.constantpool.ConstantPoolIO;
+import dev.xdark.classfile.constantpool.ConstantPoolVisitor;
 import dev.xdark.classfile.field.FieldVisitor;
-import dev.xdark.classfile.method.MethodVisitor;
-import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.Output;
+import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class writer.
@@ -19,95 +23,85 @@ import java.io.UncheckedIOException;
  * @author xDark
  */
 public final class ClassWriter implements ClassVisitor {
+    private ClassVersion version;
+    private AccessFlag access;
+    private int thisClass, superClass;
+    private int[] interfaces;
+    private ConstantPoolBuilder builder;
+    private final List<FieldWriter> fields = new ArrayList<>();
+    private final List<MethodWriter> methods = new ArrayList<>();
+    private final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
 
-    private final Output output;
-    private ClassContext classContext;
-    private int fieldPosition, methodPosition = -1;
-    private int fieldCount, methodCount;
-
-    public ClassWriter(Output output) {
-        this.output = output;
-    }
-
-    @Override
-    public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
-        try {
-            Output output = this.output;
-            output.writeInt(0xcafebabe);
-            output.writeShort(version.minorVersion());
-            output.writeShort(version.majorVersion());
-            output.writeShort(constantPool.size() + 1);
-            for (ConstantEntry<?> entry : constantPool) {
-                if (entry != null) {
-                    try {
-                        Tag<?> tag = entry.tag();
-                        output.writeByte(tag.id());
-                        ((Codec<ConstantEntry>) tag.codec()).write(output, entry);
-                    } catch (IOException ex) {
-                        throw new UncheckedIOException(ex);
-                    }
-                }
-            }
-            output.writeShort(access.mask());
-            output.writeShort(thisClass);
-            output.writeShort(superClass);
-            output.writeShort(interfaces.length);
-            for (int index : interfaces) {
-                output.writeShort(index);
-            }
-            fieldPosition = output.position();
-            output.writeShort(0);
-            classContext = new ClassContext(version, constantPool);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+    public void writeTo(Output output) throws IOException {
+        output.writeInt(0xcafebabe);
+        ClassVersion version = this.version;
+        output.writeShort(version.minorVersion());
+        output.writeShort(version.majorVersion());
+        ConstantPool cp = builder.build();
+        ConstantPoolIO.write(output, cp);
+        output.writeShort(access.mask());
+        output.writeShort(thisClass);
+        output.writeShort(superClass);
+        output.writeShort(interfaces.length);
+        for (int index : interfaces) {
+            output.writeShort(index);
         }
-    }
-
-    @Override
-    public FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
-        FieldWriter writer = new FieldWriter(output, classContext);
-        writer.visit(access, nameIndex, descriptorIndex);
-        fieldCount++;
-        return writer;
-    }
-
-    @Override
-    public MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
-        Output output = this.output;
-        if (methodPosition == -1) {
-            methodPosition = output.position();
-            try {
-                output.writeShort(0);
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
+        ClassContext classContext = new ClassContext(version, cp);
+        List<FieldWriter> fields = this.fields;
+        int count = fields.size();
+        output.writeShort(count);
+        for (int i = 0; i < count; i++) {
+            fields.get(i).writeTo(output, classContext);
         }
-        MethodWriter writer = new MethodWriter(output, classContext);
-        writer.visit(access, nameIndex, descriptorIndex);
-        methodCount++;
-        return writer;
+        List<MethodWriter> methods = this.methods;
+        count = methods.size();
+        output.writeShort(count);
+        for (int i = 0; i < count; i++) {
+            methods.get(i).writeTo(output, classContext);
+        }
+        AttributeIO.write(output, attributes, classContext);
     }
 
     @Override
-    public AttributeVisitor visitAttributes() {
-        if (methodPosition == -1) {
-            methodPosition = output.position();
-        }
-        return new AttributeWriter(output, classContext);
+    public void visitClass() {
+    }
+
+    @Override
+    public @NotNull ConstantPoolVisitor visitConstantPool() {
+        return builder = new ConstantPoolBuilder();
+    }
+
+    @Override
+    public void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+        this.version = version;
+        this.access = access;
+        this.thisClass = thisClass;
+        this.superClass = superClass;
+        this.interfaces = interfaces;
+    }
+
+    @Override
+    public @NotNull FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
+        FieldWriter fieldWriter = new FieldWriter();
+        fieldWriter.visit(access, nameIndex, descriptorIndex);
+        fields.add(fieldWriter);
+        return fieldWriter;
+    }
+
+    @Override
+    public @NotNull MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
+        MethodWriter methodWriter = new MethodWriter();
+        methodWriter.visit(access, nameIndex, descriptorIndex);
+        methods.add(methodWriter);
+        return methodWriter;
+    }
+
+    @Override
+    public @NotNull AttributeVisitor visitAttributes() {
+        return new AttributeCollector(attributes);
     }
 
     @Override
     public void visitEnd() {
-        Output output = this.output;
-        int position = output.position();
-        try {
-            output.position(fieldPosition);
-            output.writeShort(fieldCount);
-            output.position(methodPosition);
-            output.writeShort(methodCount);
-            output.position(position);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
     }
 }

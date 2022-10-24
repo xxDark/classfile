@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author xDark
  */
-public final class BuiltConstantPool implements Iterable<ConstantEntry<?>>, ConstantPool {
+public final class BuiltConstantPool implements ConstantPool {
 
     private final List<ConstantEntry<?>> entries;
     private final int size;
@@ -19,7 +19,7 @@ public final class BuiltConstantPool implements Iterable<ConstantEntry<?>>, Cons
     /**
      * @param entries List of constant pool entries.
      */
-    public BuiltConstantPool(List<ConstantEntry<?>> entries) {
+    public BuiltConstantPool(@NotNull List<ConstantEntry<?>> entries) {
         this.entries = entries;
         size = entries.stream().filter(Objects::nonNull).mapToInt(x -> x.tag().size()).sum();
     }
@@ -48,8 +48,9 @@ public final class BuiltConstantPool implements Iterable<ConstantEntry<?>>, Cons
         return size;
     }
 
+    @NotNull
     @Override
-    public Iterator<ConstantEntry<?>> iterator() {
+    public Iterator<@NotNull ConstantEntry<?>> iterator() {
         Iterator<ConstantEntry<?>> iterator = entries.iterator();
         return new Iterator<ConstantEntry<?>>() {
             @Override

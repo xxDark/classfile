@@ -40,4 +40,19 @@ public final class ConstantLong implements ConstantEntry<ConstantLong>, ValueEnt
     public @NotNull Tag<ConstantLong> tag() {
         return Tag.CONSTANT_Long;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstantLong that = (ConstantLong) o;
+
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(value);
+    }
 }

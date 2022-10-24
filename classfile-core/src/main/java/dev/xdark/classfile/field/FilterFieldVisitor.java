@@ -3,6 +3,7 @@ package dev.xdark.classfile.field;
 import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Field visitor that forwards to another visitor.
@@ -10,9 +11,10 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public class FilterFieldVisitor implements FieldVisitor {
+    @Nullable
     protected FieldVisitor fv;
 
-    public FilterFieldVisitor(FieldVisitor fv) {
+    public FilterFieldVisitor(@Nullable FieldVisitor fv) {
         this.fv = fv;
     }
 
