@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author xDark
  */
-public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8> {
+public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8>, ValueEntry<String> {
     static final Codec<ConstantUtf8> CODEC = Codec.of(input -> {
         return new ConstantUtf8(input.readUTF());
     }, (output, value) -> {
@@ -28,6 +28,11 @@ public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8> {
      * @return UTF-8 value.
      */
     public String value() {
+        return value;
+    }
+
+    @Override
+    public @NotNull String getValue() {
         return value;
     }
 

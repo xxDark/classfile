@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author xDark
  */
-public final class ConstantFloat implements ConstantEntry<ConstantFloat> {
+public final class ConstantFloat implements ConstantEntry<ConstantFloat>, ValueEntry<Float> {
     static final Codec<ConstantFloat> CODEC = Codec.of(input -> {
         return new ConstantFloat(input.readFloat());
     }, (output, value) -> {
@@ -28,6 +28,11 @@ public final class ConstantFloat implements ConstantEntry<ConstantFloat> {
      * @return Float value.
      */
     public float value() {
+        return value;
+    }
+
+    @Override
+    public @NotNull Float getValue() {
         return value;
     }
 

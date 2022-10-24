@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author xDark
  */
-public final class ConstantLong implements ConstantEntry<ConstantLong> {
+public final class ConstantLong implements ConstantEntry<ConstantLong>, ValueEntry<Long> {
     static final Codec<ConstantLong> CODEC = Codec.of(input -> {
         return new ConstantLong(input.readLong());
     }, (output, value) -> {
@@ -28,6 +28,11 @@ public final class ConstantLong implements ConstantEntry<ConstantLong> {
      * @return Long value.
      */
     public long value() {
+        return value;
+    }
+
+    @Override
+    public @NotNull Long getValue() {
         return value;
     }
 

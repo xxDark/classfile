@@ -18,6 +18,10 @@ public final class Tag<T extends ConstantEntry<T>> {
     public static final Tag<ConstantInterfaceMethodReference> CONSTANT_InterfaceMethodref = normal("CONSTANT_InterfaceMethodref", 11, ConstantInterfaceMethodReference.CODEC);
     public static final Tag<ConstantNameAndType> CONSTANT_NameAndType = normal("CONSTANT_NameAndType", 12, ConstantNameAndType.CODEC);
     public static final Tag<ConstantethodHandle> CONSTANT_MethodHandle = normal("CONSTANT_MethodHandle", 15, ConstantethodHandle.CODEC);
+    public static final Tag<ConstantMethodType> CONSTANT_MethodType = normal("CONSTANT_MethodType", 16, ConstantMethodType.CODEC);
+    public static final Tag<ConstantInvokeDynamic> CONSTANT_InvokeDynamic = normal("CONSTANT_InvokeDynamic", 18, ConstantInvokeDynamic.CODEC);
+    public static final Tag<ConstantModule> CONSTANT_Module = normal("CONSTANT_Module", 19, ConstantModule.CODEC);
+    public static final Tag<ConstantPackage> CONSTANT_Package = normal("CONSTANT_Package", 20, ConstantPackage.CODEC);
 
     private final String name;
     private final int id;

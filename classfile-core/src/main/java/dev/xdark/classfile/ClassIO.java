@@ -51,6 +51,7 @@ public class ClassIO {
             entries.add(entry);
             if (tag.size() == 2) {
                 entries.add(null);
+                i++;
             }
         }
         ConstantPool constantPool = new BuiltConstantPool(entries);
@@ -76,6 +77,9 @@ public class ClassIO {
             } else {
                 AttributeIO.read(input, classContext, attributeVisitor);
             }
+            if (fieldVisitor != null) {
+                fieldVisitor.visitEnd();
+            }
         }
         for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
             AccessFlag flag = AccessFlag.flag(input.readUnsignedShort());
@@ -87,6 +91,9 @@ public class ClassIO {
                 AttributeIO.skip(input);
             } else {
                 AttributeIO.read(input, classContext, attributeVisitor);
+            }
+            if (methodVisitor != null) {
+                methodVisitor.visitEnd();
             }
         }
         AttributeVisitor attributeVisitor = classVisitor.visitAttributes();
