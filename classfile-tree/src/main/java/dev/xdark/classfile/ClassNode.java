@@ -1,7 +1,8 @@
 package dev.xdark.classfile;
 
-import dev.xdark.classfile.attribute.AttributeVisitor;
+import dev.xdark.classfile.attribute.*;
 import dev.xdark.classfile.constantpool.ConstantPool;
+import dev.xdark.classfile.constantpool.Tag;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +46,18 @@ public class ClassNode implements ClassVisitor {
      * Fields.
      */
     public final List<FieldNode> fields = new ArrayList<>();
+    /**
+     * Methods.
+     */
+    public final List<MethodNode> methods = new ArrayList<>();
+    /**
+     * Class signature.
+     */
+    public String signature;
+    /**
+     * Class attributes.
+     */
+    public final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
 
     @Override
     public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
@@ -73,12 +86,23 @@ public class ClassNode implements ClassVisitor {
 
     @Override
     public @Nullable MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
-        return null;
+        MethodNode methodNode = new MethodNode(constantPool);
+        methodNode.visit(access, nameIndex, descriptorIndex);
+        methods.add(methodNode);
+        return methodNode;
     }
 
     @Override
     public @Nullable AttributeVisitor visitAttributes() {
-        return null;
+        return new FilterAttributeVisitor(new AttributeCollector(attributes)) {
+            @Override
+            public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
+                if (attribute instanceof SignatureAttribute) {
+                    signature = constantPool.get(((SignatureAttribute) attribute).getIndex(), Tag.CONSTANT_Utf8).value();
+                }
+                super.visitAttribute(nameIndex, attribute);
+            }
+        };
     }
 
     @Override

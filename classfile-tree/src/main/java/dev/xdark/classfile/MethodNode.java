@@ -1,8 +1,9 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.*;
-import dev.xdark.classfile.constantpool.*;
-import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.constantpool.ConstantPool;
+import dev.xdark.classfile.constantpool.Tag;
+import dev.xdark.classfile.method.MethodVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,33 +12,29 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Field node.
+ * Method node.
  *
  * @author xDark
  */
-public class FieldNode implements FieldVisitor {
+public class MethodNode implements MethodVisitor {
     /**
      * Access flags.
      */
     public AccessFlag access;
     /**
-     * Field name.
+     * Method name.
      */
     public String name;
     /**
-     * Field descriptor.
+     * Method descriptor.
      */
     public String desc;
     /**
-     * Field signature.
+     * Method signature.
      */
     public String signature;
     /**
-     * ConstantValue.
-     */
-    public Object constantValue;
-    /**
-     * Field attributes.
+     * Method attributes.
      */
     public final List<NamedAttributeInstance<?>> attributes = new ArrayList<>();
     private ConstantPool constantPool;
@@ -46,11 +43,11 @@ public class FieldNode implements FieldVisitor {
      * @param constantPool Constant pool.
      * @apiNote Usually only invoked by ClassNode.
      */
-    public FieldNode(ConstantPool constantPool) {
+    public MethodNode(ConstantPool constantPool) {
         this.constantPool = constantPool;
     }
 
-    public FieldNode() {
+    public MethodNode() {
         this(null);
     }
 
@@ -70,23 +67,6 @@ public class FieldNode implements FieldVisitor {
             public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
                 if (attribute instanceof SignatureAttribute) {
                     signature = constantPool.get(((SignatureAttribute) attribute).getIndex(), Tag.CONSTANT_Utf8).value();
-                } else if (attribute instanceof ConstantValueAttribute) {
-                    ConstantEntry<?> entry = constantPool.get(((ConstantValueAttribute) attribute).getIndex());
-                    // This is where it gets... tricky.
-                    //          Field Type 	              Entry Type
-                    // long 	                        CONSTANT_Long
-                    // float 	                        CONSTANT_Float
-                    // double 	                        CONSTANT_Double
-                    // int, short, char, byte, boolean 	CONSTANT_Integer
-                    // String                          	CONSTANT_String
-                    // See this CONSTANT_String? :x
-                    if (entry instanceof ValueEntry) {
-                        if (!(entry instanceof ConstantUtf8)) {
-                            constantValue = ((ValueEntry<?>) entry).getValue();
-                        }
-                    } else if (entry instanceof ConstantString) {
-                        constantValue = constantPool.get(((ConstantString) entry).index(), Tag.CONSTANT_Utf8).value();
-                    }
                 }
                 super.visitAttribute(nameIndex, attribute);
             }
