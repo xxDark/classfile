@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public final class LocalVariableTableAttribute implements Attribute<LocalVariabl
     }
 
     @Override
-    public AttributeInfo<LocalVariableTableAttribute> info() {
+    public @NotNull AttributeInfo<LocalVariableTableAttribute> info() {
         return AttributeInfo.LocalVariableTable;
     }
 

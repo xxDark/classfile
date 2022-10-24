@@ -1,9 +1,11 @@
-package dev.xdark.classfile.file;
+package dev.xdark.classfile;
 
-import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.version.ClassVersion;
+import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class visitor.
@@ -20,7 +22,7 @@ public interface ClassVisitor {
      * @param superClass   Super name index.
      * @param interfaces   Interface name indices.
      */
-    void visit(ClassVersion version, ConstantPool constantPool, AccessFlag access, int thisClass, int superClass, int[] interfaces);
+    void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces);
 
     /**
      * Visits new field.
@@ -31,7 +33,7 @@ public interface ClassVisitor {
      * @return New field visitor or {@code null},
      * if field should not be visited.
      */
-    FieldVisitor visitField(AccessFlag access, int nameIndex, int descriptorIndex);
+    @Nullable FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex);
 
     /**
      * Visits new method.
@@ -42,13 +44,13 @@ public interface ClassVisitor {
      * @return New method visitor or {@code null},
      * if method should not be visited.
      */
-    MethodVisitor visitMethod(AccessFlag access, int nameIndex, int descriptorIndex);
+    @Nullable MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex);
 
     /**
      * @return New attribute visitor or {@code null},
      * if attributes should not be visited.
      */
-    AttributeVisitor visitAttributes();
+    @Nullable AttributeVisitor visitAttributes();
 
     /**
      * Called after class has been visited.

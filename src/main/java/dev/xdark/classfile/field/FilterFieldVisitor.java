@@ -1,7 +1,8 @@
-package dev.xdark.classfile.file;
+package dev.xdark.classfile.field;
 
 import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Field visitor that forwards to another visitor.
@@ -19,7 +20,7 @@ public class FilterFieldVisitor implements FieldVisitor {
     }
 
     @Override
-    public void visit(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public void visit(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         FieldVisitor mv = this.fv;
         if (mv != null) {
             mv.visit(access, nameIndex, descriptorIndex);

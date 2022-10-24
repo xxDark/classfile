@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_InterfaceMethodref.
@@ -42,7 +43,7 @@ public final class ConstantNameAndType implements ConstantEntry<ConstantNameAndT
     }
 
     @Override
-    public Tag<ConstantNameAndType> tag() {
+    public @NotNull Tag<ConstantNameAndType> tag() {
         return Tag.CONSTANT_NameAndType;
     }
 }

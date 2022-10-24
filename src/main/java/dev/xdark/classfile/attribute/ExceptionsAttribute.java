@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Exceptions.
@@ -38,7 +39,7 @@ public final class ExceptionsAttribute implements Attribute<ExceptionsAttribute>
     }
 
     @Override
-    public AttributeInfo<ExceptionsAttribute> info() {
+    public @NotNull AttributeInfo<ExceptionsAttribute> info() {
         return AttributeInfo.Exceptions;
     }
 }

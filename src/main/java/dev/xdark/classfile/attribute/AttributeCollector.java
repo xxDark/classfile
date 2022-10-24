@@ -1,5 +1,7 @@
 package dev.xdark.classfile.attribute;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 
 /**
@@ -23,7 +25,7 @@ public final class AttributeCollector implements AttributeVisitor {
     }
 
     @Override
-    public void visitAttribute(int nameIndex, Attribute<?> attribute) {
+    public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
         attributes.add(new NamedAttributeInstance(nameIndex, attribute));
     }
 

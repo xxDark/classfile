@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * SourceDebugExtension.
@@ -26,7 +27,7 @@ public final class SourceDebugExtensionAttribute implements Attribute<SourceDebu
     }
 
     @Override
-    public AttributeInfo<SourceDebugExtensionAttribute> info() {
+    public @NotNull AttributeInfo<SourceDebugExtensionAttribute> info() {
         return AttributeInfo.SourceDebugExtension;
     }
 

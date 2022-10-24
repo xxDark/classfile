@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ConstantValue.
@@ -34,7 +35,7 @@ public final class SignatureAttribute implements Attribute<SignatureAttribute> {
     }
 
     @Override
-    public AttributeInfo<SignatureAttribute> info() {
+    public @NotNull AttributeInfo<SignatureAttribute> info() {
         return AttributeInfo.Signature;
     }
 }

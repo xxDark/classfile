@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Unknown attribute.
@@ -33,7 +34,7 @@ public final class UnknownAttribute implements Attribute<UnknownAttribute> {
     }
 
     @Override
-    public AttributeInfo<UnknownAttribute> info() {
+    public @NotNull AttributeInfo<UnknownAttribute> info() {
         return AttributeInfo.UNKNOWN;
     }
 }

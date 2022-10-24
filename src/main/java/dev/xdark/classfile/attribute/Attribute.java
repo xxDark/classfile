@@ -1,5 +1,7 @@
 package dev.xdark.classfile.attribute;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Attribute.
  *
@@ -10,5 +12,5 @@ public interface Attribute<SELF extends Attribute<SELF>> {
     /**
      * @return Attribute info.
      */
-    AttributeInfo<SELF> info();
+    @NotNull AttributeInfo<SELF> info();
 }

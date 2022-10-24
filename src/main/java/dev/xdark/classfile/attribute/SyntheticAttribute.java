@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Synthetic.
@@ -19,7 +20,7 @@ public final class SyntheticAttribute implements Attribute<SyntheticAttribute> {
     });
 
     @Override
-    public AttributeInfo<SyntheticAttribute> info() {
+    public @NotNull AttributeInfo<SyntheticAttribute> info() {
         return AttributeInfo.Synthetic;
     }
 }

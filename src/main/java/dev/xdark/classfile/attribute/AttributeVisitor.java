@@ -1,5 +1,7 @@
 package dev.xdark.classfile.attribute;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Attribute visitor.
  *
@@ -18,7 +20,7 @@ public interface AttributeVisitor {
      * @param nameIndex Attribute name index.
      * @param attribute Attribute visited.
      */
-    void visitAttribute(int nameIndex, Attribute<?> attribute);
+    void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute);
 
     /**
      * Called after all attributes have been visited.

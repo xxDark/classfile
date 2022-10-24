@@ -4,6 +4,7 @@ import dev.xdark.classfile.attribute.Attribute;
 import dev.xdark.classfile.attribute.AttributeIO;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.io.Output;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -30,7 +31,7 @@ final class AttributeWriter implements AttributeVisitor {
     }
 
     @Override
-    public void visitAttribute(int nameIndex, Attribute<?> attribute) {
+    public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
         try {
             AttributeIO.write(output, nameIndex, classContext, attribute);
         } catch (IOException ex) {

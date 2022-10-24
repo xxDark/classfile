@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * SourceFile.
@@ -35,7 +36,7 @@ public final class SourceFileAttribute implements Attribute<SourceFileAttribute>
     }
 
     @Override
-    public AttributeInfo<SourceFileAttribute> info() {
+    public @NotNull AttributeInfo<SourceFileAttribute> info() {
         return AttributeInfo.SourceFile;
     }
 }

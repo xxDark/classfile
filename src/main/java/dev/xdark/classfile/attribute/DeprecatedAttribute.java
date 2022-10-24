@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Deprecated.
@@ -19,7 +20,7 @@ public final class DeprecatedAttribute implements Attribute<DeprecatedAttribute>
     });
 
     @Override
-    public AttributeInfo<DeprecatedAttribute> info() {
+    public @NotNull AttributeInfo<DeprecatedAttribute> info() {
         return AttributeInfo.Deprecated;
     }
 }

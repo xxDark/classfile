@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.Nullable;
 
 public final class Tag<T extends ConstantEntry<T>> {
 
@@ -32,14 +33,15 @@ public final class Tag<T extends ConstantEntry<T>> {
 
     /**
      * @param id Tag ID.
-     * @return Tag by it's id.
-     * @throws IllegalArgumentException If tag ID is invalid.
+     * @return Tag by it's id or {@code null},
+     * if tag is unknown.
      */
+    @Nullable
     public static <T extends ConstantEntry<T>> Tag<T> of(int id) {
         Tag<?>[] tags = ALL_TAGS;
         Tag<T> tag;
         if (id < 0 || id >= tags.length || (tag = (Tag<T>) tags[id]) == null) {
-            throw new IllegalArgumentException(Integer.toString(id));
+            return null;
         }
         return tag;
     }

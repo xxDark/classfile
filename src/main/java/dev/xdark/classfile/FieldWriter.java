@@ -1,8 +1,9 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.AttributeVisitor;
-import dev.xdark.classfile.file.FieldVisitor;
+import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.io.Output;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -17,7 +18,7 @@ final class FieldWriter implements FieldVisitor {
     }
 
     @Override
-    public void visit(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public void visit(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         Output output = this.output;
         try {
             output.writeShort(access.mask());

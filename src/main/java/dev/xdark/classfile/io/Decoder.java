@@ -1,5 +1,7 @@
 package dev.xdark.classfile.io;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 /**
@@ -15,5 +17,5 @@ public interface Decoder<T> {
      * @return Read instance.
      * @throws IOException If any I/O error occurs.
      */
-    T read(Input input) throws IOException;
+    @NotNull T read(@NotNull Input input) throws IOException;
 }

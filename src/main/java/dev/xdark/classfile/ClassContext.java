@@ -1,7 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.version.ClassVersion;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class context for context-aware codecs.
@@ -20,6 +20,7 @@ public final class ClassContext {
     /**
      * @return Class version.
      */
+    @NotNull
     public ClassVersion getClassVersion() {
         return classVersion;
     }
@@ -27,6 +28,7 @@ public final class ClassContext {
     /**
      * @return Constant pool.
      */
+    @NotNull
     public ConstantPool getConstantPool() {
         return constantPool;
     }

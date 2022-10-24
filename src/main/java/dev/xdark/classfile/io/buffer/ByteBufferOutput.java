@@ -41,7 +41,7 @@ public final class ByteBufferOutput implements Output {
 
     @Override
     public Output position(int position) {
-        buffer.position(position);
+        ensureWriteable(position - buffer.position()).position(position);
         return this;
     }
 

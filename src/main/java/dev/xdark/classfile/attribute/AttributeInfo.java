@@ -4,6 +4,8 @@ import dev.xdark.classfile.ClassContext;
 import dev.xdark.classfile.attribute.stackmap.StackMapTableAttribute;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +61,7 @@ public final class AttributeInfo<T extends Attribute<T>> {
      * @param name Attribute name.
      * @return Attribute information.
      */
+    @NotNull
     public static <T extends Attribute<T>> AttributeInfo<T> byName(String name) {
         return (AttributeInfo<T>) BY_NAME.getOrDefault(name, UNKNOWN);
     }
@@ -66,6 +69,7 @@ public final class AttributeInfo<T extends Attribute<T>> {
     /**
      * @return Attribute codec.
      */
+    @NotNull
     public ContextCodec<T, ClassContext, ClassContext> codec() {
         return codec;
     }
@@ -74,6 +78,7 @@ public final class AttributeInfo<T extends Attribute<T>> {
      * @return Known attribute info, if it is defined
      * in the JVM specification.
      */
+    @Nullable
     public KnownInfo known() {
         return knownInfo;
     }

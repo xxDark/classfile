@@ -3,11 +3,10 @@ package dev.xdark.classfile;
 import dev.xdark.classfile.attribute.AttributeIO;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.*;
-import dev.xdark.classfile.file.ClassVisitor;
-import dev.xdark.classfile.file.FieldVisitor;
-import dev.xdark.classfile.file.MethodVisitor;
+import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
 import dev.xdark.classfile.io.Input;
-import dev.xdark.classfile.version.ClassVersion;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,25 +27,29 @@ public class ClassIO {
      * @param classVisitor Class visitor.
      * @throws IOException Throws I/O exception if any error occurs.
      */
-    public static void read(Input input, ClassVisitor classVisitor) throws IOException {
+    public static void read(@NotNull Input input, @NotNull ClassVisitor classVisitor) throws IOException {
         int magic = input.readInt();
         if (magic != 0xcafebabe) {
             throw new IOException("Bad classfile magic " + Integer.toHexString(magic));
         }
         int minor = input.readUnsignedShort();
         int major = input.readUnsignedShort();
-        if (major < ClassVersion.V1.majorVersion() || major > ClassVersion.V19.majorVersion()) {
-            throw new IOException("Unsupported clas version " + major);
-        }
         ClassVersion version = ClassVersion.of(major, minor);
+        if (version == null) {
+            throw new InvalidClassException("Invalid or unsupported class version (major: " + major + ", minor: " + minor + ")");
+        }
         int constantPoolCount = input.readUnsignedShort();
         List<ConstantEntry<?>> entries = new ArrayList<>(constantPoolCount + 1);
         entries.add(null);
         for (int i = 1; i < constantPoolCount; i++) {
-            Tag<?> tag = Tag.of(input.readUnsignedByte());
+            int tagId = input.readUnsignedByte();
+            Tag<?> tag = Tag.of(tagId);
+            if (tag == null) {
+                throw new InvalidClassException("Unknown tag " + tagId);
+            }
             ConstantEntry<?> entry = tag.codec().read(input);
             entries.add(entry);
-            if (entry.tag().size() == 2) {
+            if (tag.size() == 2) {
                 entries.add(null);
             }
         }

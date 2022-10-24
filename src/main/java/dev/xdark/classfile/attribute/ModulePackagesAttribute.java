@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ModulePackages.
@@ -40,7 +41,7 @@ public final class ModulePackagesAttribute implements Attribute<ModulePackagesAt
     }
 
     @Override
-    public AttributeInfo<ModulePackagesAttribute> info() {
+    public @NotNull AttributeInfo<ModulePackagesAttribute> info() {
         return AttributeInfo.ModulePackages;
     }
 }

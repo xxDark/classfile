@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_Integer.
@@ -31,7 +32,7 @@ public final class ConstantDouble implements ConstantEntry<ConstantDouble> {
     }
 
     @Override
-    public Tag<ConstantDouble> tag() {
+    public @NotNull Tag<ConstantDouble> tag() {
         return Tag.CONSTANT_Double;
     }
 }

@@ -6,6 +6,7 @@ import dev.xdark.classfile.constantpool.Tag;
 import dev.xdark.classfile.io.ContextEncoder;
 import dev.xdark.classfile.io.Input;
 import dev.xdark.classfile.io.Output;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public final class AttributeIO {
     /**
      * @param input Skips attributes.
      */
-    public static void skip(Input input) throws IOException {
+    public static void skip(@NotNull Input input) throws IOException {
         for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
             input.skipBytes(2);
             input.skipBytes(input.readInt());
@@ -37,7 +38,7 @@ public final class AttributeIO {
      * @param visitor      Attribute visitor.
      * @throws IOException If any I/O error occurs.
      */
-    public static void read(Input input, ClassContext classContext, AttributeVisitor visitor) throws IOException {
+    public static void read(@NotNull Input input, @NotNull ClassContext classContext, @NotNull AttributeVisitor visitor) throws IOException {
         visitor.visitAttributes();
         ConstantPool constantPool = classContext.getConstantPool();
         for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
@@ -66,7 +67,7 @@ public final class AttributeIO {
      * @param attribute    Attribute to write.
      * @throws IOException If any I/O error occurs.
      */
-    public static void write(Output output, int nameIndex, ClassContext classContext, Attribute<?> attribute) throws IOException {
+    public static void write(@NotNull Output output, int nameIndex, @NotNull ClassContext classContext, @NotNull Attribute<?> attribute) throws IOException {
         output.writeShort(nameIndex);
         ((ContextEncoder<Attribute, ClassContext>) attribute.info().codec()).write(output, attribute, classContext);
     }

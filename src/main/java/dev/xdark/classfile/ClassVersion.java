@@ -1,4 +1,6 @@
-package dev.xdark.classfile.version;
+package dev.xdark.classfile;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class file version.
@@ -92,16 +94,16 @@ public final class ClassVersion {
     /**
      * @param majorVersion Class major version.
      * @param minorVersion Minor version.
-     * @return Version instance.
-     * @throws IllegalArgumentException If class file version is out of range.
+     * @return Version instance or {@code null},
+     * if it is invalid.
      */
+    @Nullable
     public static ClassVersion of(int majorVersion, int minorVersion) {
         if (majorVersion < ClassVersion.V1.majorVersion() || majorVersion > ClassVersion.V19.majorVersion()) {
             throw new IllegalArgumentException(Integer.toString(majorVersion));
         }
-        majorVersion -= CLASS_VERSION_OFFSET;
         if (minorVersion == 0) {
-            return VERSIONS[majorVersion];
+            return VERSIONS[majorVersion - CLASS_VERSION_OFFSET];
         }
         return new ClassVersion(majorVersion, minorVersion);
     }

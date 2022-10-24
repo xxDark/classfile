@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * PermittedSubclasses.
@@ -38,7 +39,7 @@ public final class PermittedSubclassesAttribute implements Attribute<PermittedSu
     }
 
     @Override
-    public AttributeInfo<PermittedSubclassesAttribute> info() {
+    public @NotNull AttributeInfo<PermittedSubclassesAttribute> info() {
         return AttributeInfo.PermittedSubclasses;
     }
 }

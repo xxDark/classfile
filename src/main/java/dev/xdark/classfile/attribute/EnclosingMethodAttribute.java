@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * EnclosingMethod.
@@ -45,7 +46,7 @@ public final class EnclosingMethodAttribute implements Attribute<EnclosingMethod
     }
 
     @Override
-    public AttributeInfo<EnclosingMethodAttribute> info() {
+    public @NotNull AttributeInfo<EnclosingMethodAttribute> info() {
         return AttributeInfo.EnclosingMethod;
     }
 }

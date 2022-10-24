@@ -1,5 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Constant pool.
  *
@@ -13,7 +15,7 @@ public interface ConstantPool extends Iterable<ConstantEntry<?>> {
      * @throws IllegalArgumentException If index is out of bounds,
      *                                  or if the index points to the reserved slot.
      */
-    ConstantEntry<?> get(int index);
+    @NotNull ConstantEntry<?> get(int index);
 
     /**
      * @param index Entry index.
@@ -21,7 +23,7 @@ public interface ConstantPool extends Iterable<ConstantEntry<?>> {
      * @return Entry.
      * @throws IllegalArgumentException If tag does not match.
      */
-    <T extends ConstantEntry<T>> T get(int index, Tag<T> tag);
+    @NotNull <T extends ConstantEntry<T>> T get(int index, Tag<T> tag);
 
     /**
      * @return Constant pool size.

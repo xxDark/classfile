@@ -1,5 +1,7 @@
 package dev.xdark.classfile.attribute;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Attribute visitor that forwards to another visitor.
  *
@@ -25,7 +27,7 @@ public abstract class FilterAttributeVisitor implements AttributeVisitor {
     }
 
     @Override
-    public void visitAttribute(int nameIndex, Attribute<?> attribute) {
+    public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
         AttributeVisitor av = this.av;
         if (av != null) {
             av.visitAttribute(nameIndex, attribute);

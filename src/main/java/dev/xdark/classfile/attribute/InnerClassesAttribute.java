@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public final class InnerClassesAttribute implements Attribute<InnerClassesAttrib
     }
 
     @Override
-    public AttributeInfo<InnerClassesAttribute> info() {
+    public @NotNull AttributeInfo<InnerClassesAttribute> info() {
         return AttributeInfo.InnerClasses;
     }
 

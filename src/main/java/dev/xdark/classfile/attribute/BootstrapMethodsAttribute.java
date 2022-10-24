@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public final class BootstrapMethodsAttribute implements Attribute<BootstrapMetho
     }
 
     @Override
-    public AttributeInfo<BootstrapMethodsAttribute> info() {
+    public @NotNull AttributeInfo<BootstrapMethodsAttribute> info() {
         return AttributeInfo.BootstrapMethods;
     }
 

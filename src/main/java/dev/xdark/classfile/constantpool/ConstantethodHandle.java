@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_InterfaceMethodref.
@@ -42,7 +43,7 @@ public final class ConstantethodHandle implements ConstantEntry<ConstantethodHan
     }
 
     @Override
-    public Tag<ConstantethodHandle> tag() {
+    public @NotNull Tag<ConstantethodHandle> tag() {
         return Tag.CONSTANT_MethodHandle;
     }
 }

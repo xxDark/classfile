@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * NestMembers.
@@ -38,7 +39,7 @@ public final class NestMembersAttribute implements Attribute<NestMembersAttribut
     }
 
     @Override
-    public AttributeInfo<NestMembersAttribute> info() {
+    public @NotNull AttributeInfo<NestMembersAttribute> info() {
         return AttributeInfo.NestMembers;
     }
 }

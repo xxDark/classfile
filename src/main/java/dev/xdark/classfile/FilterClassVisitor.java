@@ -1,9 +1,10 @@
-package dev.xdark.classfile.file;
+package dev.xdark.classfile;
 
-import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.ConstantPool;
-import dev.xdark.classfile.version.ClassVersion;
+import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class visitor that forwards to another visitor.
@@ -21,7 +22,7 @@ public class FilterClassVisitor implements ClassVisitor {
     }
 
     @Override
-    public void visit(ClassVersion version, ConstantPool constantPool, AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+    public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
         ClassVisitor cv = this.cv;
         if (cv != null) {
             cv.visit(version, constantPool, access, thisClass, superClass, interfaces);
@@ -29,7 +30,7 @@ public class FilterClassVisitor implements ClassVisitor {
     }
 
     @Override
-    public FieldVisitor visitField(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         ClassVisitor cv = this.cv;
         if (cv != null) {
             return cv.visitField(access, nameIndex, descriptorIndex);
@@ -38,7 +39,7 @@ public class FilterClassVisitor implements ClassVisitor {
     }
 
     @Override
-    public MethodVisitor visitMethod(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         ClassVisitor cv = this.cv;
         if (cv != null) {
             return cv.visitMethod(access, nameIndex, descriptorIndex);

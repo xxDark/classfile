@@ -4,12 +4,11 @@ import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.constantpool.ConstantEntry;
 import dev.xdark.classfile.constantpool.ConstantPool;
 import dev.xdark.classfile.constantpool.Tag;
-import dev.xdark.classfile.file.ClassVisitor;
-import dev.xdark.classfile.file.FieldVisitor;
-import dev.xdark.classfile.file.MethodVisitor;
+import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.Output;
-import dev.xdark.classfile.version.ClassVersion;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -31,7 +30,7 @@ public final class ClassWriter implements ClassVisitor {
     }
 
     @Override
-    public void visit(ClassVersion version, ConstantPool constantPool, AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+    public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
         try {
             Output output = this.output;
             output.writeInt(0xcafebabe);
@@ -65,7 +64,7 @@ public final class ClassWriter implements ClassVisitor {
     }
 
     @Override
-    public FieldVisitor visitField(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         FieldWriter writer = new FieldWriter(output, classContext);
         writer.visit(access, nameIndex, descriptorIndex);
         fieldCount++;
@@ -73,7 +72,7 @@ public final class ClassWriter implements ClassVisitor {
     }
 
     @Override
-    public MethodVisitor visitMethod(AccessFlag access, int nameIndex, int descriptorIndex) {
+    public MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
         Output output = this.output;
         if (methodPosition == -1) {
             methodPosition = output.position();

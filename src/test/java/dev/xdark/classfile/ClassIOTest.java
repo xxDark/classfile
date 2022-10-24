@@ -3,12 +3,16 @@ package dev.xdark.classfile;
 import dev.xdark.classfile.attribute.*;
 import dev.xdark.classfile.constantpool.ConstantPool;
 import dev.xdark.classfile.constantpool.Tag;
-import dev.xdark.classfile.file.*;
+import dev.xdark.classfile.field.FieldVisitor;
+import dev.xdark.classfile.field.FilterFieldVisitor;
 import dev.xdark.classfile.io.ContextCodec;
 import dev.xdark.classfile.io.buffer.ByteBufferAllocator;
 import dev.xdark.classfile.io.buffer.ByteBufferInput;
 import dev.xdark.classfile.io.buffer.ByteBufferOutput;
-import dev.xdark.classfile.version.ClassVersion;
+import dev.xdark.classfile.method.FilterMethodVisitor;
+import dev.xdark.classfile.method.MethodVisitor;
+import dev.xdark.classfile.opcode.Opcode;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -44,7 +48,7 @@ public class ClassIOTest {
                 private ClassContext classContext;
 
                 @Override
-                public void visit(ClassVersion version, ConstantPool constantPool, AccessFlag access, int thisClass, int superClass, int[] interfaces) {
+                public void visit(@NotNull ClassVersion version, @NotNull ConstantPool constantPool, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
                     assertEquals(ClassIO.getClassName(constantPool, thisClass), internalName);
                     if (superClass != 0) {
                         assertEquals(ClassIO.getClassName(constantPool, superClass), c.getSuperclass().getName().replace('.', '/'));
@@ -58,7 +62,7 @@ public class ClassIOTest {
                 }
 
                 @Override
-                public MethodVisitor visitMethod(AccessFlag access, int nameIndex, int descriptorIndex) {
+                public MethodVisitor visitMethod(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
                     return new FilterMethodVisitor(super.visitMethod(access, nameIndex, descriptorIndex)) {
                         @Override
                         public AttributeVisitor visitAttributes() {
@@ -68,7 +72,7 @@ public class ClassIOTest {
                 }
 
                 @Override
-                public FieldVisitor visitField(AccessFlag access, int nameIndex, int descriptorIndex) {
+                public FieldVisitor visitField(@NotNull AccessFlag access, int nameIndex, int descriptorIndex) {
                     return new FilterFieldVisitor(super.visitField(access, nameIndex, descriptorIndex)) {
                         @Override
                         public AttributeVisitor visitAttributes() {
@@ -96,7 +100,7 @@ public class ClassIOTest {
         }
 
         @Override
-        public void visitAttribute(int nameIndex, Attribute<?> attribute) {
+        public void visitAttribute(int nameIndex, @NotNull Attribute<?> attribute) {
             if (attribute instanceof UnknownAttribute) {
                 if (AttributeInfo.byName(classContext.getConstantPool().get(nameIndex, Tag.CONSTANT_Utf8).value()).known() != null) {
                     fail("Attribute reader produced corrupted attribute");
@@ -112,63 +116,25 @@ public class ClassIOTest {
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }
-        }
-    }
-
-    public static byte[] filter(byte[] input) {
-        ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);
-        ClassWriter writer = new ClassWriter(output);
-        try {
-            ClassIO.read(new ByteBufferInput(ByteBuffer.wrap(input)), new FilterClassVisitor(writer) {
-                @Override
-                public AttributeVisitor visitAttributes() {
-                    return new IllegalAttributeRemoverVisitor(super.visitAttributes(), AttributeLocation.CLASS);
-                }
-
-                @Override
-                public MethodVisitor visitMethod(AccessFlag access, int nameIndex, int descriptorIndex) {
-                    return new FilterMethodVisitor(super.visitMethod(access, nameIndex, descriptorIndex)) {
-                        @Override
-                        public AttributeVisitor visitAttributes() {
-                            return new IllegalAttributeRemoverVisitor(super.visitAttributes(), AttributeLocation.METHOD);
+            if (attribute instanceof CodeAttribute) {
+                byte[] code = ((CodeAttribute) attribute).getCode();
+                ByteBuffer buffer = ByteBuffer.wrap(code);
+                ByteBufferInput input = new ByteBufferInput(buffer);
+                while (buffer.hasRemaining()) {
+                    try {
+                        int position = input.position();
+                        int raw = input.readUnsignedByte();
+                        Opcode<?> opcode = Opcode.of(raw);
+                        if (opcode == null) {
+                            throw new IOException("Failed to read opcode " + raw);
                         }
-                    };
+                        input.position(position);
+                        opcode.codec().read(input);
+                    } catch (IOException ex) {
+                        throw new UncheckedIOException(ex);
+                    }
                 }
-
-                @Override
-                public FieldVisitor visitField(AccessFlag access, int nameIndex, int descriptorIndex) {
-                    return new FilterFieldVisitor(super.visitField(access, nameIndex, descriptorIndex)) {
-                        @Override
-                        public AttributeVisitor visitAttributes() {
-                            return new IllegalAttributeRemoverVisitor(super.visitAttributes(), AttributeLocation.FIELD);
-                        }
-                    };
-                }
-            });
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-        ByteBuffer buffer = output.consume();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return bytes;
-    }
-
-    public static final class IllegalAttributeRemoverVisitor extends FilterAttributeVisitor {
-        private final AttributeLocation location;
-
-        public IllegalAttributeRemoverVisitor(AttributeVisitor av, AttributeLocation location) {
-            super(av);
-            this.location = location;
-        }
-
-        @Override
-        public void visitAttribute(int nameIndex, Attribute<?> attribute) {
-            KnownInfo known = attribute.info().known();
-            if (known == null || !known.locations().contains(location)) {
-                return;
             }
-            super.visitAttribute(nameIndex, attribute);
         }
     }
 }

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public final class LineNumberTableAttribute implements Attribute<LineNumberTable
     }
 
     @Override
-    public AttributeInfo<LineNumberTableAttribute> info() {
+    public @NotNull AttributeInfo<LineNumberTableAttribute> info() {
         return AttributeInfo.LineNumberTable;
     }
 

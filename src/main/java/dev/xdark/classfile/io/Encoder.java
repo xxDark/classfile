@@ -1,5 +1,7 @@
 package dev.xdark.classfile.io;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 /**
@@ -15,5 +17,5 @@ public interface Encoder<T> {
      * @param value  Value to write.
      * @throws IOException If any I/O error occurs.
      */
-    void write(Output output, T value) throws IOException;
+    void write(@NotNull Output output, @NotNull T value) throws IOException;
 }

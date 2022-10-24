@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * NestHost.
@@ -34,7 +35,7 @@ public final class NestHostAttribute implements Attribute<NestHostAttribute> {
     }
 
     @Override
-    public AttributeInfo<NestHostAttribute> info() {
+    public @NotNull AttributeInfo<NestHostAttribute> info() {
         return AttributeInfo.NestHost;
     }
 }

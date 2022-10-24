@@ -3,7 +3,8 @@ package dev.xdark.classfile.attribute;
 import dev.xdark.classfile.ClassContext;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
-import dev.xdark.classfile.version.ClassVersion;
+import dev.xdark.classfile.ClassVersion;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,7 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
     }
 
     @Override
-    public AttributeInfo<CodeAttribute> info() {
+    public @NotNull AttributeInfo<CodeAttribute> info() {
         return AttributeInfo.Code;
     }
 

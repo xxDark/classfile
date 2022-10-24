@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_Fieldref.
@@ -42,7 +43,7 @@ public final class ConstantFieldReference implements ConstantEntry<ConstantField
     }
 
     @Override
-    public Tag<ConstantFieldReference> tag() {
+    public @NotNull Tag<ConstantFieldReference> tag() {
         return Tag.CONSTANT_Fieldref;
     }
 }

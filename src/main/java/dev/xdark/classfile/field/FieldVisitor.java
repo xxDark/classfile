@@ -1,7 +1,9 @@
-package dev.xdark.classfile.file;
+package dev.xdark.classfile.field;
 
 import dev.xdark.classfile.AccessFlag;
 import dev.xdark.classfile.attribute.AttributeVisitor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Field visitor.
@@ -15,13 +17,13 @@ public interface FieldVisitor {
      * @param nameIndex       Name index.
      * @param descriptorIndex Descriptor index.
      */
-    void visit(AccessFlag access, int nameIndex, int descriptorIndex);
+    void visit(@NotNull AccessFlag access, int nameIndex, int descriptorIndex);
 
     /**
      * @return New attribute visitor or {@code null},
      * if attributes should not be visited.
      */
-    AttributeVisitor visitAttributes();
+    @Nullable AttributeVisitor visitAttributes();
 
     /**
      * Called after method has been visited.

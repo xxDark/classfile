@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ConstantValue.
@@ -34,7 +35,7 @@ public final class ConstantValueAttribute implements Attribute<ConstantValueAttr
     }
 
     @Override
-    public AttributeInfo<ConstantValueAttribute> info() {
+    public @NotNull AttributeInfo<ConstantValueAttribute> info() {
         return AttributeInfo.ConstantValue;
     }
 }

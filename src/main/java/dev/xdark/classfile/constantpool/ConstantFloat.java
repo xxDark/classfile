@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_Integer.
@@ -31,7 +32,7 @@ public final class ConstantFloat implements ConstantEntry<ConstantFloat> {
     }
 
     @Override
-    public Tag<ConstantFloat> tag() {
+    public @NotNull Tag<ConstantFloat> tag() {
         return Tag.CONSTANT_Float;
     }
 }

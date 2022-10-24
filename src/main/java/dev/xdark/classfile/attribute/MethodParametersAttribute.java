@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public final class MethodParametersAttribute implements Attribute<MethodParamete
     }
 
     @Override
-    public AttributeInfo<MethodParametersAttribute> info() {
+    public @NotNull AttributeInfo<MethodParametersAttribute> info() {
         return AttributeInfo.MethodParameters;
     }
 

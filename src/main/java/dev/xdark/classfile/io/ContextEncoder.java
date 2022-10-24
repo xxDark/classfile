@@ -1,5 +1,7 @@
 package dev.xdark.classfile.io;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 /**
@@ -16,5 +18,5 @@ public interface ContextEncoder<T, CTX> {
      * @param ctx    Context.
      * @throws IOException If any I/O error occurs.
      */
-    void write(Output output, T value, CTX ctx) throws IOException;
+    void write(@NotNull Output output, @NotNull T value, @NotNull CTX ctx) throws IOException;
 }

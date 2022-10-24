@@ -5,6 +5,7 @@ import dev.xdark.classfile.attribute.AttributeInfo;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrame;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrameType;
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public final class StackMapTableAttribute implements Attribute<StackMapTableAttr
     }
 
     @Override
-    public AttributeInfo<StackMapTableAttribute> info() {
+    public @NotNull AttributeInfo<StackMapTableAttribute> info() {
         return AttributeInfo.StackMapTable;
     }
 }

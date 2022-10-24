@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ModuleMainClass.
@@ -34,7 +35,7 @@ public final class ModuleMainClassAttribute implements Attribute<ModuleMainClass
     }
 
     @Override
-    public AttributeInfo<ModuleMainClassAttribute> info() {
+    public @NotNull AttributeInfo<ModuleMainClassAttribute> info() {
         return AttributeInfo.ModuleMainClass;
     }
 }

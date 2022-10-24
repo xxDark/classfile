@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * CONSTANT_Utf8.
@@ -31,7 +32,7 @@ public final class ConstantClass implements ConstantEntry<ConstantClass> {
     }
 
     @Override
-    public Tag<ConstantClass> tag() {
+    public @NotNull Tag<ConstantClass> tag() {
         return Tag.CONSTANT_Class;
     }
 }

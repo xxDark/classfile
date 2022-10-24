@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -126,7 +127,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
     }
 
     @Override
-    public AttributeInfo<ModuleAttribute> info() {
+    public @NotNull AttributeInfo<ModuleAttribute> info() {
         return AttributeInfo.Module;
     }
 

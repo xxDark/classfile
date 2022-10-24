@@ -1,5 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +25,7 @@ public final class BuiltConstantPool implements Iterable<ConstantEntry<?>>, Cons
     }
 
     @Override
-    public ConstantEntry<?> get(int index) {
+    public @NotNull ConstantEntry<?> get(int index) {
         List<ConstantEntry<?>> entries;
         ConstantEntry<?> entry;
         if (index < 1 || index >= (entries = this.entries).size() || (entry = entries.get(index)) == null) {
@@ -33,7 +35,7 @@ public final class BuiltConstantPool implements Iterable<ConstantEntry<?>>, Cons
     }
 
     @Override
-    public <T extends ConstantEntry<T>> T get(int index, Tag<T> tag) {
+    public <T extends ConstantEntry<T>> @NotNull T get(int index, Tag<T> tag) {
         ConstantEntry<?> entry = get(index);
         if (entry.tag() != tag) {
             throw new IllegalArgumentException("Wrong tag type " + entry.tag());
