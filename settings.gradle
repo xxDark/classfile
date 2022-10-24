@@ -1,2 +1,3 @@
 rootProject.name = 'classfile'
+include 'classfile-core'
 
