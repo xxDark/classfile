@@ -41,7 +41,8 @@ public final class AttributeInfo<T extends Attribute<T>> {
     public static final AttributeInfo<SyntheticAttribute> Synthetic = info(SyntheticAttribute.CODEC, kinfo("Synthetic", CLASS, METHOD, FIELD));
     public static final AttributeInfo<DeprecatedAttribute> Deprecated = info(DeprecatedAttribute.CODEC, kinfo("Deprecated", CLASS, METHOD, FIELD));
     public static final AttributeInfo<SignatureAttribute> Signature = info(SignatureAttribute.CODEC, kinfo("Signature", CLASS, METHOD, FIELD, RECORD));
-    // TODO RuntimeVisibleAnnotations, RuntimeInvisibleAnnotations
+    public static final AttributeInfo<RuntimeVisibleAnnotationsAttribute> RuntimeVisibleAnnotations = info(RuntimeVisibleAnnotationsAttribute.CODEC, kinfo("RuntimeVisibleAnnotations", CLASS, METHOD, FIELD, RECORD));
+    public static final AttributeInfo<RuntimeInvisibleAnnotationsAttribute> RuntimeInvisibleAnnotations = info(RuntimeInvisibleAnnotationsAttribute.CODEC, kinfo("RuntimeInvisibleAnnotations", CLASS, METHOD, FIELD, RECORD));
     public static final AttributeInfo<LineNumberTableAttribute> LineNumberTable = info(LineNumberTableAttribute.CODEC, kinfo("LineNumberTable", CODE));
     public static final AttributeInfo<LocalVariableTableAttribute> LocalVariableTable = info(LocalVariableTableAttribute.CODEC, kinfo("LocalVariableTable", CODE));
     public static final AttributeInfo<LocalVariableTypeTableAttribute> LocalVariableTypeTable = info(LocalVariableTypeTableAttribute.CODEC, kinfo("LocalVariableTypeTable", CODE));

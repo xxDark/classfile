@@ -36,6 +36,27 @@ public final class AccessFlag {
     }
 
     /**
+     * @param a First flag.
+     * @param b Second flag.
+     * @return New access flag.
+     */
+    public static AccessFlag of(AccessFlag a, AccessFlag b) {
+        return a.or(b);
+    }
+
+    /**
+     * @param flags Array of flags to join together.
+     * @return New access flag.
+     */
+    public static AccessFlag of(AccessFlag... flags) {
+        int mask = 0;
+        for (AccessFlag flag : flags) {
+            mask |= flag.mask;
+        }
+        return new AccessFlag(mask);
+    }
+
+    /**
      * @return Access mask.
      */
     public int mask() {

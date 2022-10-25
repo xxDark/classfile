@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.stackmap.type;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Verification types.
@@ -29,13 +30,15 @@ public final class VerificationType<T extends VerificationTypeInfo<T>> {
 
     /**
      * @param id Verification type ID.
-     * @return Verification type by it's id.
-     * @throws IllegalArgumentException If verification type ID is invalid.
+     * @return Verification type by it's id or {@code null},
+     * if it is invalid
      */
+    // TODO fix me
+    @Nullable
     public static <T extends VerificationTypeInfo<T>> VerificationType<T> of(int id) {
-        VerificationType<?>[] tags = ALL_TYPES;
-        if (id < 0 || id >= tags.length) {
-            throw new IllegalArgumentException(Integer.toString(id));
+        VerificationType<?>[] tags;
+        if (id < 0 || id >= (tags = ALL_TYPES).length) {
+            return null;
         }
         return (VerificationType<T>) tags[id];
     }

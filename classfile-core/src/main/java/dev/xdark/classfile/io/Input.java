@@ -20,6 +20,11 @@ public interface Input extends Seekable, DataInput {
     byte[] read(int length) throws IOException;
 
     /**
+     * @return How many bytes do we have left?
+     */
+    int remaining();
+
+    /**
      * @return Whether the EOF was reached.
      */
     boolean hasRemaining();

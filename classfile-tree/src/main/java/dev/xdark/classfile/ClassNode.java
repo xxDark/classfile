@@ -124,41 +124,37 @@ public class ClassNode implements ClassVisitor {
     public void visitEnd() {
     }
 
-    public void accept(ClassVisitor classVisitor) {
-        classVisitor.visitClass();
-        ConstantPoolVisitor visitor = classVisitor.visitConstantPool();
-        ConstantPoolBuilder builder = new ConstantPoolBuilder();
-        int thisClas = builder.putClass(name);
+    /**
+     * Feeds this class node into the class visitor.
+     *
+     * @param classVisitor Class visitor.
+     * @param builder      Constant pool builder.
+     */
+    public void accept(ClassVisitor classVisitor, ConstantPoolBuilder builder) {
         String superName = this.superName;
-        int superClass = superName == null ? 0 : builder.putClass(superName);
-        int[] interfaces = this.interfaces.stream().mapToInt(builder::putClass).toArray();
-        classVisitor.visit(version, access, thisClas, superClass, interfaces);
-        for (MethodNode method : methods) {
-            MethodVisitor mv = classVisitor.visitMethod(method.access, builder.putUtf8(name), builder.putUtf8(method.desc));
+        classVisitor.visit(version, access, builder.putClass(name), superName == null ? 0 : builder.putClass(superName), interfaces.stream().mapToInt(builder::putClass).toArray());
+        for (MethodNode methodNode : methods) {
+            MethodVisitor mv = classVisitor.visitMethod(methodNode.access, builder.putUtf8(methodNode.name), builder.putUtf8(methodNode.desc));
             if (mv != null) {
-                method.accept(mv, builder);
+                methodNode.accept(mv, builder);
+                mv.visitEnd();
             }
         }
-        for (FieldNode field : fields) {
-            FieldVisitor fv = classVisitor.visitField(field.access, builder.putUtf8(name), builder.putUtf8(field.desc));
+        for (FieldNode fieldNode : fields) {
+            FieldVisitor fv = classVisitor.visitField(fieldNode.access, builder.putUtf8(fieldNode.name), builder.putUtf8(fieldNode.desc));
             if (fv != null) {
-                field.accept(fv, builder);
+                fieldNode.accept(fv, builder);
+                fv.visitEnd();
             }
         }
         AttributeVisitor attributeVisitor = classVisitor.visitAttributes();
         if (attributeVisitor != null) {
-            attributeVisitor.visitAttributes();
-            NodeUtil.putSignature(attributeVisitor, builder, signature);
-            List<UnknownStoredAttribute> attributes = this.attributes;
+            AttributeAdapter adapter = new AttributeAdapter(attributeVisitor, builder);
+            NodeUtil.putSignature(adapter, builder, signature);
             for (UnknownStoredAttribute attribute : attributes) {
-                attributeVisitor.visitAttribute(builder.putUtf8(attribute.getName()), attribute.getAttribute());
+                adapter.visitAttribute(attribute.getName(), attribute.getAttribute());
             }
-            attributeVisitor.visitEnd();
-        }
-        if (visitor != null) {
-            for (ConstantEntry<?> entry : builder.build()) {
-                visitor.visitConstant(entry);
-            }
+            adapter.visitEnd();
         }
     }
 }

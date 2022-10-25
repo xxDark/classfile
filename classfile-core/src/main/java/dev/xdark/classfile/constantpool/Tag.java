@@ -43,11 +43,10 @@ public final class Tag<T extends ConstantEntry<T>> {
     @Nullable
     public static <T extends ConstantEntry<T>> Tag<T> of(int id) {
         Tag<?>[] tags = ALL_TAGS;
-        Tag<T> tag;
-        if (id < 0 || id >= tags.length || (tag = (Tag<T>) tags[id]) == null) {
+        if (id < 0 || id >= tags.length) {
             return null;
         }
-        return tag;
+        return (Tag<T>) tags[id];
     }
 
     /**

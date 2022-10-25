@@ -30,6 +30,11 @@ public final class ByteBufferInput implements Input {
     }
 
     @Override
+    public int remaining() {
+        return buffer.remaining();
+    }
+
+    @Override
     public boolean hasRemaining() {
         return buffer.hasRemaining();
     }

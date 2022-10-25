@@ -1,6 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.*;
+import dev.xdark.classfile.attribute.code.CodeIO;
 import dev.xdark.classfile.constantpool.ConstantPool;
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.constantpool.Tag;

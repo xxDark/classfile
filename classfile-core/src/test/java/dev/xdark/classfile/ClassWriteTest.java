@@ -25,7 +25,7 @@ public class ClassWriteTest {
         ConstantPoolBuilder cp = writer.visitConstantPool();
         ClassAdapter adapter = new ClassAdapter(writer, cp);
         adapter.visit(ClassVersion.V8, AccessFlag.ACC_PUBLIC, "Test", "java/lang/Object");
-        MethodAdapter mv = adapter.visitMethod(AccessFlag.ACC_PUBLIC.or(AccessFlag.ACC_STATIC), "main", "([Ljava/lang/String;)V");
+        MethodAdapter mv = adapter.visitMethod(AccessFlag.of(AccessFlag.ACC_PUBLIC, AccessFlag.ACC_STATIC), "main", "([Ljava/lang/String;)V");
         AttributeAdapter attributes = mv.visitAttributes();
         CodeBuilder codeBuilder = new CodeBuilder(ClassVersion.V8);
         CodeAdapter codeAdapter = new CodeAdapter(codeBuilder, cp);
@@ -36,12 +36,12 @@ public class ClassWriteTest {
         codeAdapter.visitInsn(Opcode.RETURN);
         codeAdapter.visitLabel(label);
         codeAdapter.visitFieldInsn(Opcode.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        codeAdapter.visitUtf8("Hello, World!");
+        codeAdapter.visitUtf8Ldc("Hello, World!");
         codeAdapter.visitMethodInsn(Opcode.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
         codeAdapter.visitInsn(Opcode.RETURN);
         codeAdapter.visitMaxs(2, 1);
         codeAdapter.visitEnd();
-        attributes.visitAttribute("Code", codeBuilder.create());
+        attributes.visitAttribute(codeBuilder.create());
         attributes.visitEnd();
         adapter.visitEnd();
         ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.code;
 
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
+import dev.xdark.classfile.dynamic.MethodHandle;
 import dev.xdark.classfile.opcode.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -107,7 +108,7 @@ public class CodeAdapter extends FilterCodeVisitor {
     /**
      * @param value Long value to push on the stack.
      */
-    public void visitLong(long value) {
+    public void visitLongLdc(long value) {
         if (value == 0L || value == 1L) {
             visitInsn(value == 0L ? Opcode.LCONST_0 : Opcode.LCONST_1);
         } else {
@@ -118,7 +119,7 @@ public class CodeAdapter extends FilterCodeVisitor {
     /**
      * @param value Double value to push on the stack.
      */
-    public void visitDouble(double value) {
+    public void visitDoubleLdc(double value) {
         if (value == 0.0D || value == 1.0D) {
             visitInsn(value == 0L ? Opcode.DCONST_0 : Opcode.DCONST_1);
         } else {
@@ -129,7 +130,7 @@ public class CodeAdapter extends FilterCodeVisitor {
     /**
      * @param value Int value to push on the stack.
      */
-    public void visitInt(int value) {
+    public void visitIntLdc(int value) {
         if (value >= -1 && value <= 5) {
             visitInsn(ICONSTS[value + 1]);
         } else {
@@ -140,7 +141,7 @@ public class CodeAdapter extends FilterCodeVisitor {
     /**
      * @param value Float value to push on the stack.
      */
-    public void visitFloat(float value) {
+    public void visitFloatLdc(float value) {
         if (value == 0.0F) {
             visitInsn(Opcode.FCONST_0);
         } else if (value == 1.0F) {
@@ -155,8 +156,15 @@ public class CodeAdapter extends FilterCodeVisitor {
     /**
      * @param value String value to push on the stack.
      */
-    public void visitUtf8(String value) {
+    public void visitUtf8Ldc(String value) {
         visitLdc(builder.putString(value));
+    }
+
+    /**
+     * @param value MethodHandle to push on the stack.
+     */
+    public void visitMethodHandleLdc(MethodHandle value) {
+        visitLdc(builder.putMethodHandle(value));
     }
 
     private void visitLdc(int index) {

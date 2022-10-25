@@ -27,4 +27,16 @@ public class AttributeAdapter extends FilterAttributeVisitor {
     public void visitAttribute(String name, Attribute<?> attribute) {
         visitAttribute(builder.putUtf8(name), attribute);
     }
+
+    /**
+     * @param attribute Attribute.
+     * @throws IllegalArgumentException If attribute is not known.
+     */
+    public void visitAttribute(Attribute<?> attribute) {
+        KnownInfo known = attribute.info().known();
+        if (known == null) {
+            throw new IllegalArgumentException("Unknown attribute " + attribute);
+        }
+        visitAttribute(known.name(), attribute);
+    }
 }
