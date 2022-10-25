@@ -49,6 +49,6 @@ public final class ElementValueArray implements ElementValue<ElementValueArray> 
 
     @Override
     public @NotNull ElementType<ElementValueArray> type() {
-        return null;
+        return ElementType.ARRAY;
     }
 }
