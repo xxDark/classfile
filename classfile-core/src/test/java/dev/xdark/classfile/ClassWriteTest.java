@@ -45,11 +45,13 @@ public class ClassWriteTest {
         mv.visitEnd();
         ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);
         writer.writeTo(output);
-        ByteBuffer buf = output.consume();
-        byte[] b = new byte[buf.remaining()];
-        buf.get(b);
-        Path p = Paths.get("Test.class").toAbsolutePath();
-        System.out.println(p);
-        Files.write(p, b);
+        if (false) {
+            ByteBuffer buf = output.consume();
+            byte[] b = new byte[buf.remaining()];
+            buf.get(b);
+            Path p = Paths.get("Test.class").toAbsolutePath();
+            System.out.println(p);
+            Files.write(p, b);
+        }
     }
 }
