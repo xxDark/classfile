@@ -12,7 +12,6 @@ out/
 .project
 
 # Gradle
-target/
 build/
 generated/
 gradle-app.setting

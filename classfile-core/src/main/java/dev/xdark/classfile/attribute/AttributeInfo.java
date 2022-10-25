@@ -2,6 +2,8 @@ package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.ClassContext;
 import dev.xdark.classfile.attribute.stackmap.StackMapTableAttribute;
+import dev.xdark.classfile.attribute.type.RuntimeInvisibleTypeAnnotationsAttribute;
+import dev.xdark.classfile.attribute.type.RuntimeVisibleTypeAnnotationsAttribute;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +38,8 @@ public final class AttributeInfo<T extends Attribute<T>> {
     public static final AttributeInfo<ConstantValueAttribute> ConstantValue = info(ConstantValueAttribute.CODEC, kinfo("ConstantValue", FIELD));
     public static final AttributeInfo<CodeAttribute> Code = info(CodeAttribute.CODEC, kinfo("Code", METHOD));
     public static final AttributeInfo<ExceptionsAttribute> Exceptions = info(ExceptionsAttribute.CODEC, kinfo("Exceptions", METHOD));
-    // TODO RuntimeVisibleParameterAnnotations, RuntimeInvisibleParameterAnnotations
+    public static final AttributeInfo<RuntimeVisibleRuntimeParameterAnnotationsAttribute> RuntimeVisibleParameterAnnotations = info(RuntimeVisibleRuntimeParameterAnnotationsAttribute.CODEC, kinfo("RuntimeVisibleParameterAnnotations", METHOD));
+    public static final AttributeInfo<RuntimeInvisibleRuntimeParameterAnnotationsAttribute> RuntimeInvisibleParameterAnnotations = info(RuntimeInvisibleRuntimeParameterAnnotationsAttribute.CODEC, kinfo("RuntimeInvisibleRuntimeParameterAnnotations", METHOD));
     public static final AttributeInfo<AnnotationDefaultAttribute> AnnotationDefault = info(AnnotationDefaultAttribute.CODEC, kinfo("AnnotationDefault", METHOD));
     public static final AttributeInfo<MethodParametersAttribute> MethodParameters = info(MethodParametersAttribute.CODEC, kinfo("MethodParameters", METHOD));
     public static final AttributeInfo<SyntheticAttribute> Synthetic = info(SyntheticAttribute.CODEC, kinfo("Synthetic", CLASS, METHOD, FIELD));
@@ -48,6 +51,8 @@ public final class AttributeInfo<T extends Attribute<T>> {
     public static final AttributeInfo<LocalVariableTableAttribute> LocalVariableTable = info(LocalVariableTableAttribute.CODEC, kinfo("LocalVariableTable", CODE));
     public static final AttributeInfo<LocalVariableTypeTableAttribute> LocalVariableTypeTable = info(LocalVariableTypeTableAttribute.CODEC, kinfo("LocalVariableTypeTable", CODE));
     public static final AttributeInfo<StackMapTableAttribute> StackMapTable = info(StackMapTableAttribute.CODEC, kinfo("StackMapTable", CODE));
+    public static final AttributeInfo<RuntimeVisibleTypeAnnotationsAttribute> RuntimeVisibleTypeAnnotations = info(RuntimeVisibleTypeAnnotationsAttribute.CODEC, kinfo("RuntimeVisibleTypeAnnotations", CLASS, FIELD, METHOD, RECORD));
+    public static final AttributeInfo<RuntimeInvisibleTypeAnnotationsAttribute> RuntimeInvisibleTypeAnnotations = info(RuntimeInvisibleTypeAnnotationsAttribute.CODEC, kinfo("RuntimeInvisibleTypeAnnotation", CLASS, FIELD, METHOD, RECORD));
 
     public static final AttributeInfo<UnknownAttribute> UNKNOWN = info(UnknownAttribute.CODEC, null);
 
