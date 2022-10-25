@@ -7,7 +7,7 @@ import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.io.buffer.ByteBufferAllocator;
 import dev.xdark.classfile.io.buffer.ByteBufferOutput;
-import dev.xdark.classfile.method.MethodVisitor;
+import dev.xdark.classfile.method.MethodAdapter;
 import dev.xdark.classfile.opcode.Opcode;
 import org.junit.jupiter.api.Test;
 
@@ -23,9 +23,10 @@ public class ClassWriteTest {
     public void testClassCreation() throws IOException {
         ClassWriter writer = new ClassWriter();
         ConstantPoolBuilder cp = writer.visitConstantPool();
-        writer.visit(ClassVersion.V8, AccessFlag.ACC_PUBLIC, cp.putClass("Test"), cp.putClass("java/lang/Object"), new int[0]);
-        MethodVisitor mv = writer.visitMethod(AccessFlag.ACC_PUBLIC.or(AccessFlag.ACC_STATIC), cp.putUtf8("main"), cp.putUtf8("([Ljava/lang/String;)V"));
-        AttributeAdapter attributes = new AttributeAdapter(mv.visitAttributes(), cp);
+        ClassAdapter adapter = new ClassAdapter(writer, cp);
+        adapter.visit(ClassVersion.V8, AccessFlag.ACC_PUBLIC, "Test", "java/lang/Object");
+        MethodAdapter mv = adapter.visitMethod(AccessFlag.ACC_PUBLIC.or(AccessFlag.ACC_STATIC), "main", "([Ljava/lang/String;)V");
+        AttributeAdapter attributes = mv.visitAttributes();
         CodeBuilder codeBuilder = new CodeBuilder(ClassVersion.V8);
         CodeAdapter codeAdapter = new CodeAdapter(codeBuilder, cp);
         codeAdapter.visitMethodInsn(Opcode.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);

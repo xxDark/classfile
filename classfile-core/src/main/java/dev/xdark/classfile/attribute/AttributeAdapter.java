@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author xDark
  */
 public class AttributeAdapter extends FilterAttributeVisitor {
-    private final ConstantPoolBuilder builder;
+    protected final ConstantPoolBuilder builder;
 
     /**
      * @param av      Backing attribute visitor.

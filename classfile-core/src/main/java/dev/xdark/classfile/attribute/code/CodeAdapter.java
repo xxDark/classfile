@@ -19,7 +19,7 @@ public class CodeAdapter extends FilterCodeVisitor {
             Opcode.ICONST_4,
             Opcode.ICONST_5,
     };
-    private final ConstantPoolBuilder builder;
+    protected final ConstantPoolBuilder builder;
 
     /**
      * @param cv      Backing code visitor.
