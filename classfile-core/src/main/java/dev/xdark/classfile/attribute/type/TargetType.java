@@ -62,12 +62,12 @@ public final class TargetType<T extends TargetInfo<T>> {
      * if it wasn't found.
      */
     @Nullable
-    public static <T extends TargetInfo<T>> TargetType<T> of(int kind) {
+    public static TargetType<?> of(int kind) {
         TargetType<?>[] types;
         if (kind < 0 || kind >= (types = ALL_TYPES).length) {
             return null;
         }
-        return (TargetType<T>) types[kind];
+        return types[kind];
     }
 
     /**
@@ -90,7 +90,7 @@ public final class TargetType<T extends TargetInfo<T>> {
 
     static <T extends TargetInfo<T>> TargetType<T> require(Input input) throws IOException {
         int kind = input.readUnsignedByte();
-        TargetType<T> type = TargetType.of(kind);
+        TargetType<T> type = (TargetType<T>) TargetType.of(kind);
         if (type == null) {
             throw new InvalidAttributeException("unknown target " + kind);
         }

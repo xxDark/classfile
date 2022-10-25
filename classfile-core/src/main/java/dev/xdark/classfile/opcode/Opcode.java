@@ -241,12 +241,12 @@ public final class Opcode<T extends Instruction<T>> {
      * if it wasn't found.
      */
     @Nullable
-    public static <T extends Instruction<T>> Opcode<T> of(int n) {
+    public static Opcode<?> of(int n) {
         Opcode<?>[] opcodes;
         if (n < 0 || n >= (opcodes = ALL_OPCODES).length) {
             return null;
         }
-        return (Opcode<T>) opcodes[n];
+        return opcodes[n];
     }
 
     /**
@@ -281,7 +281,7 @@ public final class Opcode<T extends Instruction<T>> {
     }
 
     static <T extends Instruction<T>> Opcode<T> require(int n) throws IOException {
-        Opcode<T> opcode = of(n);
+        Opcode<T> opcode = (Opcode<T>) of(n);
         if (opcode == null) {
             throw new InvalidClassException("Unknown opcode " + n);
         }

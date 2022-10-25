@@ -1,6 +1,7 @@
 package dev.xdark.classfile.annotation;
 
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.Nullable;
 
 public final class ElementType<T extends ElementValue<T>> {
     private static final ElementType<?>[] ALL_TYPES = new ElementType['s' + 1];
@@ -28,15 +29,16 @@ public final class ElementType<T extends ElementValue<T>> {
 
     /**
      * @param tag Element value tag.
-     * @return Elent value type by it's tag.
-     *
+     * @return Element value type by it's tag,
+     * or {@code null}, if not found.
      */
-    public static <T extends ElementValue<T>> ElementType<T> of(int tag) {
+    @Nullable
+    public static ElementType<?> of(int tag) {
         ElementType<?>[] types;
         if (tag < 0 || tag >= (types = ALL_TYPES).length) {
             return null;
         }
-        return (ElementType<T>) types[tag];
+        return types[tag];
     }
 
     /**

@@ -41,12 +41,12 @@ public final class Tag<T extends ConstantEntry<T>> {
      * if tag is unknown.
      */
     @Nullable
-    public static <T extends ConstantEntry<T>> Tag<T> of(int id) {
+    public static Tag<?> of(int id) {
         Tag<?>[] tags = ALL_TAGS;
         if (id < 0 || id >= tags.length) {
             return null;
         }
-        return (Tag<T>) tags[id];
+        return tags[id];
     }
 
     /**

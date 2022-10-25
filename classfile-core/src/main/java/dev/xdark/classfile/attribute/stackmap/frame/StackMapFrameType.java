@@ -36,12 +36,12 @@ public final class StackMapFrameType<T extends StackMapFrame<T>> {
      * if not found.
      */
     @Nullable
-    public static <T extends StackMapFrame<T>> StackMapFrameType<T> of(int type) {
+    public static StackMapFrameType<?> of(int type) {
         List<StackMapFrameType<?>> types = ALL_TYPES;
         for (int i = 0, j = types.size(); i < j; i++) {
             StackMapFrameType<?> frameType = types.get(i);
             if (frameType.range().includes(type)) {
-                return (StackMapFrameType<T>) frameType;
+                return frameType;
             }
         }
         return null;

@@ -34,12 +34,12 @@ public final class VerificationType<T extends VerificationTypeInfo<T>> {
      * if it is invalid
      */
     @Nullable
-    public static <T extends VerificationTypeInfo<T>> VerificationType<T> of(int id) {
+    public static  VerificationType<?> of(int id) {
         VerificationType<?>[] tags;
         if (id < 0 || id >= (tags = ALL_TYPES).length) {
             return null;
         }
-        return (VerificationType<T>) tags[id];
+        return tags[id];
     }
 
     /**
