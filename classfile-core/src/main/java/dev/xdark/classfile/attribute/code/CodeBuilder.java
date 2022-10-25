@@ -131,7 +131,7 @@ public final class CodeBuilder implements CodeVisitor {
         int keep = output.position();
         output.position(position + 1); // Skip opcode
         // Patch default branch
-        output.writeInt(instruction.getDefault().getPosition() - position);
+        output.writeInt(instruction.getDefault().getPosition() - output.position());
         // Patch jump pairs
         Label[] labels = instruction.getLabels();
         for (Label label : labels) {
@@ -148,7 +148,7 @@ public final class CodeBuilder implements CodeVisitor {
         int keep = output.position();
         output.position(position + 1); // Skip opcode
         // Patch default branch
-        output.writeInt(instruction.getDefault().getPosition() - position);
+        output.writeInt(instruction.getDefault().getPosition() - output.position());
         // Skip low/high, length
         output.position(output.position() + 12);
         // Patch jump pairs
