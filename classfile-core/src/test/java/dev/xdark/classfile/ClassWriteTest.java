@@ -43,7 +43,7 @@ public class ClassWriteTest {
         codeAdapter.visitEnd();
         attributes.visitAttribute("Code", codeBuilder.create());
         attributes.visitEnd();
-        mv.visitEnd();
+        adapter.visitEnd();
         ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);
         writer.writeTo(output);
         if (false) {
