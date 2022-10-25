@@ -1,6 +1,6 @@
 package dev.xdark.classfile;
 
-import dev.xdark.classfile.attribute.AttributeVisitor;
+import dev.xdark.classfile.attribute.AttributeAdapter;
 import dev.xdark.classfile.attribute.code.CodeAdapter;
 import dev.xdark.classfile.attribute.code.CodeBuilder;
 import dev.xdark.classfile.attribute.code.Label;
@@ -25,7 +25,7 @@ public class ClassWriteTest {
         ConstantPoolBuilder cp = writer.visitConstantPool();
         writer.visit(ClassVersion.V8, AccessFlag.ACC_PUBLIC, cp.putClass("Test"), cp.putClass("java/lang/Object"), new int[0]);
         MethodVisitor mv = writer.visitMethod(AccessFlag.ACC_PUBLIC.or(AccessFlag.ACC_STATIC), cp.putUtf8("main"), cp.putUtf8("([Ljava/lang/String;)V"));
-        AttributeVisitor attributes = mv.visitAttributes();
+        AttributeAdapter attributes = new AttributeAdapter(mv.visitAttributes(), cp);
         CodeBuilder codeBuilder = new CodeBuilder(ClassVersion.V8);
         CodeAdapter codeAdapter = new CodeAdapter(codeBuilder, cp);
         codeAdapter.visitMethodInsn(Opcode.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
@@ -40,7 +40,7 @@ public class ClassWriteTest {
         codeAdapter.visitInsn(Opcode.RETURN);
         codeAdapter.visitMaxs(2, 1);
         codeAdapter.visitEnd();
-        attributes.visitAttribute(cp.putUtf8("Code"), codeBuilder.create());
+        attributes.visitAttribute("Code", codeBuilder.create());
         attributes.visitEnd();
         mv.visitEnd();
         ByteBufferOutput output = new ByteBufferOutput(ByteBufferAllocator.HEAP);
