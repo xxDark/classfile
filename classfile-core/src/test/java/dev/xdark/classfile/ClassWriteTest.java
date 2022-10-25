@@ -10,7 +10,6 @@ import dev.xdark.classfile.io.buffer.ByteBufferOutput;
 import dev.xdark.classfile.method.MethodVisitor;
 import dev.xdark.classfile.opcode.Opcode;
 import org.junit.jupiter.api.Test;
-import sun.net.www.HeaderParser;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
