@@ -1,22 +1,35 @@
 package dev.xdark.classfile.opcode;
 
+import dev.xdark.classfile.attribute.code.Label;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Jump instruction.
  *
  * @author xdark
  */
-public abstract class JumpInstruction<SELF extends JumpInstruction<SELF>> extends AbstractInstruction<SELF> {
-    private final int offset;
+public abstract class JumpInstruction<SELF extends JumpInstruction<SELF>>
+        extends AbstractInstruction<SELF>
+        implements FlowInstruction {
+    private final Label label;
 
-    protected JumpInstruction(Opcode<SELF> opcode, int offset) {
+    protected JumpInstruction(Opcode<SELF> opcode, Label label) {
         super(opcode);
-        this.offset = offset;
+        this.label = label;
     }
 
     /**
-     * @return Jump offset.
+     * @return Jump label.
      */
-    public int getOffset() {
-        return offset;
+    public Label getLabel() {
+        return label;
+    }
+
+    @Override
+    public @NotNull List<Label> getTargets() {
+        return Collections.singletonList(label);
     }
 }

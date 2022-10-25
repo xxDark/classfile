@@ -1,42 +1,49 @@
 package dev.xdark.classfile.opcode;
 
+import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.io.Codec;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * TableSwitch.
  *
  * @author xDark
  */
-public final class TableSwitchInstruction extends AbstractInstruction<TableSwitchInstruction> {
+public final class TableSwitchInstruction
+        extends AbstractInstruction<TableSwitchInstruction>
+        implements FlowInstruction {
     static final Codec<TableSwitchInstruction> CODEC = Codec.of(input -> {
         input.skipBytes(1);
         int pos = input.position();
         input.skipBytes(pos + (4 - pos & 3));
-        int dflt = input.readInt();
+        Label dflt = Label.create(input.position(), input.readInt());
         int low = input.readInt();
         int high = input.readInt();
-        int[] offsets = new int[high - low + 1];
+        Label[] offsets = new Label[high - low + 1];
         for (int i = 0, j = offsets.length; i < j; i++) {
-            offsets[i] = input.readInt();
+            offsets[i] = Label.create(input.position(), input.readInt());
         }
         return new TableSwitchInstruction(low, high, dflt, offsets);
     }, (output, value) -> {
         output.writeByte(value.getOpcode().opcode());
         int pos = output.position();
         output.position(pos + (4 - pos & 3));
-        output.writeInt(value.getDefault());
+        output.writeInt(value.getDefault().getOffset());
         output.writeInt(value.getLow());
         output.writeInt(value.getHigh());
-        int[] offsets = value.getLabels();
+        Label[] offsets = value.getLabels();
         output.writeInt(offsets.length);
-        for (int offset : offsets) {
-            output.writeInt(offset);
+        for (Label offset : offsets) {
+            output.writeInt(offset.getOffset());
         }
     });
     private final int low;
     private final int high;
-    private final int dflt;
-    private final int[] labels;
+    private final Label dflt;
+    private final Label[] labels;
 
     /**
      * @param low    Minimum value.
@@ -44,7 +51,7 @@ public final class TableSwitchInstruction extends AbstractInstruction<TableSwitc
      * @param dflt   Default branch offset.
      * @param labels Branch offsets.
      */
-    public TableSwitchInstruction(int low, int high, int dflt, int[] labels) {
+    public TableSwitchInstruction(int low, int high, Label dflt, Label[] labels) {
         super(Opcode.TABLE_SWITCH);
         this.low = low;
         this.high = high;
@@ -69,14 +76,14 @@ public final class TableSwitchInstruction extends AbstractInstruction<TableSwitc
     /**
      * @return Default branch.
      */
-    public int getDefault() {
+    public Label getDefault() {
         return dflt;
     }
 
     /**
      * @return Branch table.
      */
-    public int[] getLabels() {
+    public Label[] getLabels() {
         return labels;
     }
 
@@ -86,11 +93,20 @@ public final class TableSwitchInstruction extends AbstractInstruction<TableSwitc
      * @param value Value to get the offset based off.
      * @return Jump offset.
      */
-    public int select(int value) {
+    public Label select(int value) {
         int low = this.low;
         if (value < low || value > high) {
             return dflt;
         }
         return labels[value - low];
+    }
+
+    @Override
+    public @NotNull List<Label> getTargets() {
+        Label[] labels = this.labels;
+        Label[] targets = new Label[labels.length + 1];
+        System.arraycopy(labels, 0, targets, 0, labels.length);
+        targets[labels.length] = dflt;
+        return Arrays.asList(targets);
     }
 }

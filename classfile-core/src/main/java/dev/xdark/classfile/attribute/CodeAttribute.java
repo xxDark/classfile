@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.ClassContext;
+import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
 import dev.xdark.classfile.ClassVersion;
@@ -122,16 +123,16 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
 
     public static final class TryCatchBlock {
         public static final Codec<TryCatchBlock> CODEC = Codec.of(input -> {
-            return new TryCatchBlock(input.readUnsignedShort(), input.readUnsignedShort(), input.readUnsignedShort(), input.readUnsignedShort());
+            return new TryCatchBlock(Label.exact(input.readUnsignedShort()), Label.exact(input.readUnsignedShort()), Label.exact(input.readUnsignedShort()), input.readUnsignedShort());
         }, (output, value) -> {
-            output.writeShort(value.getStart());
-            output.writeShort(value.getEnd());
-            output.writeShort(value.getHandler());
+            output.writeShort(value.getStart().getPosition());
+            output.writeShort(value.getEnd().getPosition());
+            output.writeShort(value.getHandler().getPosition());
             output.writeShort(value.getTypeIndex());
         });
-        private final int start;
-        private final int end;
-        private final int handler;
+        private final Label start;
+        private final Label end;
+        private final Label handler;
         private final int typeIndex;
 
         /**
@@ -140,7 +141,7 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
          * @param handler   Handler pc.
          * @param typeIndex Type index.
          */
-        public TryCatchBlock(int start, int end, int handler, int typeIndex) {
+        public TryCatchBlock(Label start, Label end, Label handler, int typeIndex) {
             this.start = start;
             this.end = end;
             this.handler = handler;
@@ -150,21 +151,21 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
         /**
          * @return Start pc.
          */
-        public int getStart() {
+        public Label getStart() {
             return start;
         }
 
         /**
          * @return End pc.
          */
-        public int getEnd() {
+        public Label getEnd() {
             return end;
         }
 
         /**
          * @return Handler pc.
          */
-        public int getHandler() {
+        public Label getHandler() {
             return handler;
         }
 

@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class FilterInstructionVisitor implements InstructionVisitor {
     @Nullable
-    protected InstructionVisitor cv;
+    protected InstructionVisitor iv;
 
-    public FilterInstructionVisitor(@Nullable InstructionVisitor cv) {
-        this.cv = cv;
+    public FilterInstructionVisitor(@Nullable InstructionVisitor iv) {
+        this.iv = iv;
     }
 
     public FilterInstructionVisitor() {
@@ -22,7 +22,7 @@ public class FilterInstructionVisitor implements InstructionVisitor {
 
     @Override
     public void visitInstructions() {
-        InstructionVisitor cv = this.cv;
+        InstructionVisitor cv = this.iv;
         if (cv != null) {
             cv.visitInstructions();
         }
@@ -30,7 +30,7 @@ public class FilterInstructionVisitor implements InstructionVisitor {
 
     @Override
     public void visitInstruction(@NotNull Instruction<?> instruction) {
-        InstructionVisitor cv = this.cv;
+        InstructionVisitor cv = this.iv;
         if (cv != null) {
             cv.visitInstruction(instruction);
         }
@@ -38,7 +38,7 @@ public class FilterInstructionVisitor implements InstructionVisitor {
 
     @Override
     public void visitEnd() {
-        InstructionVisitor cv = this.cv;
+        InstructionVisitor cv = this.iv;
         if (cv != null) {
             cv.visitEnd();
         }

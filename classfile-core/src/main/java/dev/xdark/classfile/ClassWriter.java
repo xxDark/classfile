@@ -7,7 +7,6 @@ import dev.xdark.classfile.attribute.NamedAttributeInstance;
 import dev.xdark.classfile.constantpool.ConstantPool;
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.constantpool.ConstantPoolIO;
-import dev.xdark.classfile.constantpool.ConstantPoolVisitor;
 import dev.xdark.classfile.field.FieldVisitor;
 import dev.xdark.classfile.io.Output;
 import dev.xdark.classfile.method.MethodVisitor;
@@ -67,8 +66,13 @@ public final class ClassWriter implements ClassVisitor {
     }
 
     @Override
-    public @NotNull ConstantPoolVisitor visitConstantPool() {
-        return builder = new ConstantPoolBuilder();
+    public @NotNull ConstantPoolBuilder visitConstantPool() {
+        ConstantPoolBuilder builder = this.builder;
+        if (builder == null) {
+            builder = new ConstantPoolBuilder();
+            this.builder = builder;
+        }
+        return builder;
     }
 
     @Override

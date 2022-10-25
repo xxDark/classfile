@@ -154,7 +154,7 @@ public final class ConstantPoolBuilder implements ConstantPoolVisitor {
      * @param desc  Method descriptor.
      * @return Entry index.
      */
-    public int putMethodRef(@NotNull String owner, @NotNull String name, @NotNull String desc) {
+    public int  putMethodRef(@NotNull String owner, @NotNull String name, @NotNull String desc) {
         return put(new ConstantMethodReference(putClass(owner), putNameAndType(name, desc)));
     }
 
