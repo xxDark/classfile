@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.ContextCodec;
 import dev.xdark.classfile.io.Input;
 import dev.xdark.classfile.io.Output;
 
@@ -30,11 +31,31 @@ final class AttributeUtil {
         return readList(input, input.readUnsignedShort(), codec);
     }
 
+    static <T, CTX> List<T> readList(Input input, int count, CTX ctx, ContextCodec<T, CTX, ?> codec) throws IOException {
+        List<T> list = new ArrayList<>(limitAllocationSize(count));
+        while (count-- != 0) {
+            list.add(codec.read(input, ctx));
+        }
+        return list;
+    }
+
+    static <T, CTX> List<T> readList(Input input, CTX ctx, ContextCodec<T, CTX, ?> codec) throws IOException {
+        return readList(input, input.readUnsignedShort(), ctx, codec);
+    }
+
     static <T> void writeList(Output output, List<T> list, Codec<T> codec) throws IOException {
         int size = list.size();
         output.writeShort(size);
         for (int i = 0; i < size; i++) {
             codec.write(output, list.get(i));
+        }
+    }
+
+    static <T, CTX> void writeList(Output output, List<T> list, CTX ctx, ContextCodec<T, ?, CTX> codec) throws IOException {
+        int size = list.size();
+        output.writeShort(size);
+        for (int i = 0; i < size; i++) {
+            codec.write(output, list.get(i), ctx);
         }
     }
 

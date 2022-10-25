@@ -31,12 +31,13 @@ public final class AttributeInfo<T extends Attribute<T>> {
     public static final AttributeInfo<ModuleMainClassAttribute> ModuleMainClass = info(ModuleMainClassAttribute.CODEC, kinfo("ModuleMainClass", CLASS));
     public static final AttributeInfo<NestHostAttribute> NestHost = info(NestHostAttribute.CODEC, kinfo("NestHost", CLASS));
     public static final AttributeInfo<NestMembersAttribute> NestMembers = info(NestMembersAttribute.CODEC, kinfo("NestMembers", CLASS));
-    // TODO Record
+    public static final AttributeInfo<RecordAttribute> Record = info(RecordAttribute.CODEC, kinfo("Record", CLASS));
     public static final AttributeInfo<PermittedSubclassesAttribute> PermittedSubclasses = info(PermittedSubclassesAttribute.CODEC, kinfo("PermittedSubclasses", CLASS));
     public static final AttributeInfo<ConstantValueAttribute> ConstantValue = info(ConstantValueAttribute.CODEC, kinfo("ConstantValue", FIELD));
     public static final AttributeInfo<CodeAttribute> Code = info(CodeAttribute.CODEC, kinfo("Code", METHOD));
     public static final AttributeInfo<ExceptionsAttribute> Exceptions = info(ExceptionsAttribute.CODEC, kinfo("Exceptions", METHOD));
-    // TODO RuntimeVisibleParameterAnnotations, RuntimeInvisibleParameterAnnotations, AnnotationDefault
+    // TODO RuntimeVisibleParameterAnnotations, RuntimeInvisibleParameterAnnotations
+    public static final AttributeInfo<AnnotationDefaultAttribute> AnnotationDefault = info(AnnotationDefaultAttribute.CODEC, kinfo("AnnotationDefault", METHOD));
     public static final AttributeInfo<MethodParametersAttribute> MethodParameters = info(MethodParametersAttribute.CODEC, kinfo("MethodParameters", METHOD));
     public static final AttributeInfo<SyntheticAttribute> Synthetic = info(SyntheticAttribute.CODEC, kinfo("Synthetic", CLASS, METHOD, FIELD));
     public static final AttributeInfo<DeprecatedAttribute> Deprecated = info(DeprecatedAttribute.CODEC, kinfo("Deprecated", CLASS, METHOD, FIELD));

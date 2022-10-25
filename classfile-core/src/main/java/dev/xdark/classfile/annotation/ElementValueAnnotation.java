@@ -39,7 +39,9 @@ public final class ElementValueAnnotation implements ElementValue<ElementValueAn
         for (int i = 0; i < count; i++) {
             output.writeShort(nameIndices[i]);
             ElementValue<?> v = values[i];
-            ((Codec) v.type().codec()).write(output, v);
+            ElementType<?> type = v.type();
+            output.writeByte(type.tag());
+            ((Codec) type.codec()).write(output, v);
         }
     });
 

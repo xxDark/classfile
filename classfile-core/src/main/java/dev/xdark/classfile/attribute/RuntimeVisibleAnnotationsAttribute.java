@@ -5,7 +5,6 @@ import dev.xdark.classfile.annotation.ElementValueAnnotation;
 import dev.xdark.classfile.io.Codec;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

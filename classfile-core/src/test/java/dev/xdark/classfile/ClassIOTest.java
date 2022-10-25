@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -28,6 +30,8 @@ public class ClassIOTest {
     public void testRead() throws IOException {
         test(Object.class);
         test(System.class);
+        test(Retention.class);
+        test(Target.class);
     }
 
     private static void test(Class<?> c) throws IOException {
@@ -62,8 +66,9 @@ public class ClassIOTest {
                 public void visit(@NotNull ClassVersion version, @NotNull AccessFlag access, int thisClass, int superClass, int[] interfaces) {
                     ConstantPool constantPool = this.constantPool;
                     assertEquals(ClassIO.getClassName(constantPool, thisClass), internalName);
-                    if (superClass != 0) {
-                        assertEquals(ClassIO.getClassName(constantPool, superClass), c.getSuperclass().getName().replace('.', '/'));
+                    Class<?> sp = c.getSuperclass();
+                    if (superClass != 0 && sp != null /* apparently, getSuperClass will return null for annotations?? */) {
+                        assertEquals(ClassIO.getClassName(constantPool, superClass), sp.getName().replace('.', '/'));
                     }
                     classContext = new ClassContext(version, constantPool);
                 }

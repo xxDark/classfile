@@ -28,7 +28,9 @@ public final class ElementValueArray implements ElementValue<ElementValueArray> 
         ElementValue<?>[] values = value.getValues();
         output.writeShort(values.length);
         for (ElementValue<?> v : values) {
-            ((Codec) v.type().codec()).write(output, v);
+            ElementType<?> type = v.type();
+            output.writeByte(type.tag());
+            ((Codec) type.codec()).write(output, v);
         }
     });
     private final ElementValue<?>[] values;
