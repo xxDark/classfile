@@ -26,9 +26,7 @@ public final class RecordAttribute implements Attribute<RecordAttribute> {
     }, (output, value, ctx) -> {
         int position = output.position();
         output.writeInt(0);
-        List<RecordComponent> components = value.getComponents();
-        output.writeShort(components.size());
-        AttributeUtil.writeList(output, components, ctx, RecordComponent.CODEC);
+        AttributeUtil.writeList(output, value.getComponents(), ctx, RecordComponent.CODEC);
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
