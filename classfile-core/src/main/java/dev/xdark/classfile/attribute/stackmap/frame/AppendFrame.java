@@ -25,7 +25,12 @@ public final class AppendFrame extends StackMapFrame<AppendFrame> {
         int verificationTypeCount = type - 251;
         List<VerificationTypeInfo<?>> verificationTypeInfos = new ArrayList<>(verificationTypeCount);
         while (verificationTypeCount-- != 0) {
-            verificationTypeInfos.add(VerificationType.of(input.readUnsignedByte()).codec().read(input));
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            verificationTypeInfos.add(verificationType.codec().read(input));
         }
         return new AppendFrame(type, offsetDelta, verificationTypeInfos);
     }, (output, value) -> {

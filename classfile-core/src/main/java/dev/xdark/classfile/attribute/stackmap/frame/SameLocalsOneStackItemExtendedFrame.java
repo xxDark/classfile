@@ -18,7 +18,12 @@ public final class SameLocalsOneStackItemExtendedFrame extends StackMapFrame<Sam
             throw new InvalidAttributeException("Mismatched frame type");
         }
         int offsetDelta = input.readUnsignedShort();
-        VerificationTypeInfo<?> info = VerificationType.of(input.readUnsignedByte()).codec().read(input);
+        int tag = input.readUnsignedByte();
+        VerificationType<?> verificationType = VerificationType.of(tag);
+        if (verificationType == null) {
+            throw new InvalidAttributeException("Unknown verification type " + tag);
+        }
+        VerificationTypeInfo<?> info = verificationType.codec().read(input);
         return new SameLocalsOneStackItemExtendedFrame(offsetDelta, info);
     }, (output, value) -> {
         output.writeByte(value.getType());

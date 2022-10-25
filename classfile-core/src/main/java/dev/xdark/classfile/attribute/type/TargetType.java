@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute.type;
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.Input;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -55,6 +56,12 @@ public final class TargetType<T extends TargetInfo<T>> {
         this.codec = codec;
     }
 
+    /**
+     * @param kind Target type kind.
+     * @return Target type by it's kind or {@code null},
+     * if it wasn't found.
+     */
+    @Nullable
     public static <T extends TargetInfo<T>> TargetType<T> of(int kind) {
         TargetType<?>[] types;
         if (kind < 0 || kind >= (types = ALL_TYPES).length) {

@@ -33,7 +33,6 @@ public final class VerificationType<T extends VerificationTypeInfo<T>> {
      * @return Verification type by it's id or {@code null},
      * if it is invalid
      */
-    // TODO fix me
     @Nullable
     public static <T extends VerificationTypeInfo<T>> VerificationType<T> of(int id) {
         VerificationType<?>[] tags;

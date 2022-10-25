@@ -1,5 +1,6 @@
 package dev.xdark.classfile.attribute.stackmap.frame;
 
+import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.attribute.stackmap.type.VerificationType;
 import dev.xdark.classfile.attribute.stackmap.type.VerificationTypeInfo;
 import dev.xdark.classfile.io.Codec;
@@ -13,7 +14,12 @@ import dev.xdark.classfile.io.Codec;
 public final class SameLocalsOneStackItemFrame extends StackMapFrame<SameLocalsOneStackItemFrame> {
     static final Codec<SameLocalsOneStackItemFrame> CODEC = Codec.of(input -> {
         int frameType = input.readUnsignedByte();
-        VerificationTypeInfo<?> info = VerificationType.of(input.readUnsignedByte()).codec().read(input);
+        int tag = input.readUnsignedByte();
+        VerificationType<?> verificationType = VerificationType.of(tag);
+        if (verificationType == null) {
+            throw new InvalidAttributeException("Unknown verification type " + tag);
+        }
+        VerificationTypeInfo<?> info = verificationType.codec().read(input);
         return new SameLocalsOneStackItemFrame(frameType - FrameTypeRange.SAME_LOCALS_1_STACK_ITEM.getFrom(), info);
     }, (output, value) -> {
         output.writeByte(value.getType());

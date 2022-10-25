@@ -23,12 +23,22 @@ public final class FullFrame extends StackMapFrame<FullFrame> {
         int numberOfLocals = input.readUnsignedShort();
         List<VerificationTypeInfo<?>> locals = new ArrayList<>(numberOfLocals);
         while (numberOfLocals-- != 0) {
-            locals.add(VerificationType.of(input.readUnsignedByte()).codec().read(input));
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            locals.add(verificationType.codec().read(input));
         }
         int numberOfStack = input.readUnsignedShort();
         List<VerificationTypeInfo<?>> stack = new ArrayList<>(numberOfStack);
         while (numberOfStack-- != 0) {
-            stack.add(VerificationType.of(input.readUnsignedByte()).codec().read(input));
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            stack.add(verificationType.codec().read(input));
         }
         return new FullFrame(offsetDelta, locals, stack);
     }, (output, value) -> {
