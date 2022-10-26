@@ -1,7 +1,7 @@
 package dev.xdark.classfile;
 
 import dev.xdark.classfile.attribute.AttributeAdapter;
-import dev.xdark.classfile.attribute.code.CodeAdapter;
+import dev.xdark.classfile.attribute.code.CodeWriter;
 import dev.xdark.classfile.attribute.code.CodeBuilder;
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.io.buffer.ByteBufferAllocator;
@@ -28,7 +28,7 @@ public class ClassWriteTest {
         MethodAdapter mv = adapter.visitMethod(AccessFlag.of(AccessFlag.ACC_PUBLIC, AccessFlag.ACC_STATIC), "main", "([Ljava/lang/String;)V");
         AttributeAdapter attributes = mv.visitAttributes();
         CodeBuilder codeBuilder = new CodeBuilder(ClassVersion.V8);
-        CodeAdapter codeAdapter = new CodeAdapter(codeBuilder, cp);
+        CodeWriter codeAdapter = new CodeWriter(codeBuilder, cp);
         codeAdapter.visitMethodInsn(Opcode.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
         codeAdapter.visitInsn(Opcode.L2I);
         Label label = new Label();

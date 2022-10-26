@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -21,11 +22,17 @@ public final class LocalVariableTargetInfo implements TargetInfo<LocalVariableTa
         }
         return new LocalVariableTargetInfo(type, localVariables);
     }, (output, value) -> {
+        output.writeByte(value.type().kind());
         List<LocalVariable> localVariables = value.getLocalVariables();
         int count = localVariables.size();
         output.writeShort(count);
         for (int i = 0; i < count; i++) {
             LocalVariable.CODEC.write(output, localVariables.get(i));
+        }
+    }, input -> {
+        input.skipBytes(1);
+        for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
+            LocalVariable.CODEC.skip(input);
         }
     });
     private final TargetType<LocalVariableTargetInfo> type;
@@ -59,7 +66,7 @@ public final class LocalVariableTargetInfo implements TargetInfo<LocalVariableTa
             output.writeShort(value.getStart());
             output.writeShort(value.getLength());
             output.writeShort(value.getIndex());
-        });
+        }, Skip.exact(6));
         private final int start;
         private final int length;
         private final int index;

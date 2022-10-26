@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Jump instruction in which offset
@@ -16,7 +17,7 @@ public final class IntJumpInstruction extends JumpInstruction<IntJumpInstruction
         int bytecodePosition = output.position();
         output.writeByte(value.getOpcode().opcode());
         value.getLabel().write(bytecodePosition, output, true);
-    });
+    }, Skip.exact(5));
 
     public IntJumpInstruction(Opcode<IntJumpInstruction> opcode, Label offset) {
         super(opcode, offset);

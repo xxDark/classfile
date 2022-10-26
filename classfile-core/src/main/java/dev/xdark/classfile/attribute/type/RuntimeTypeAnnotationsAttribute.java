@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute.type;
 import dev.xdark.classfile.attribute.Attribute;
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,6 @@ public abstract class RuntimeTypeAnnotationsAttribute<SELF extends RuntimeTypeAn
             int newPosition = output.position();
             output.position(position).writeInt(newPosition - position - 4);
             output.position(newPosition);
-        });
+        }, Skip.u32());
     }
 }

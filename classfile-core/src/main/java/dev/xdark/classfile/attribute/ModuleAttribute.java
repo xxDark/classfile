@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
-    });
+    }, Skip.u32());
     private final int nameIndex;
     private final int flags;
     private final int versionIndex;
@@ -138,7 +139,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
             output.writeShort(value.getIndex());
             output.writeShort(value.getFlags());
             output.writeShort(value.getVersionIndex());
-        });
+        }, Skip.exact(6));
         private final int index;
         private final int flags;
         private final int versionIndex;
@@ -186,7 +187,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
             output.writeShort(value.getIndex());
             output.writeShort(value.getFlags());
             AttributeUtil.writeUnsignedShorts(output, value.getExportIndices());
-        });
+        }, Skip.exact(4).then(Skip.u16Array(Skip.LengthSkip.u16())));
         private final int index;
         private final int flags;
         private final int[] exportIndices;
@@ -234,7 +235,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
             output.writeShort(value.getIndex());
             output.writeShort(value.getFlags());
             AttributeUtil.writeUnsignedShorts(output, value.getOpensToIndices());
-        });
+        }, Skip.exact(4).then(Skip.u16Array(Skip.LengthSkip.u16())));
         private final int index;
         private final int flags;
         private final int[] opensToIndices;
@@ -280,7 +281,7 @@ public final class ModuleAttribute implements Attribute<ModuleAttribute> {
         }, (output, value) -> {
             output.writeShort(value.getIndex());
             AttributeUtil.writeUnsignedShorts(output, value.getServices());
-        });
+        }, Skip.exact(2).then(Skip.u16Array(Skip.LengthSkip.u16())));
         private final int index;
         private final int[] services;
 

@@ -6,6 +6,7 @@ import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrame;
 import dev.xdark.classfile.attribute.stackmap.frame.StackMapFrameType;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public final class StackMapTableAttribute implements Attribute<StackMapTableAttr
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
-    });
+    }, Skip.u32());
     private final List<StackMapFrame<?>> frames;
 
     /**

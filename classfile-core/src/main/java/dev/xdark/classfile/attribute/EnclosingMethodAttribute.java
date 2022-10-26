@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +19,7 @@ public final class EnclosingMethodAttribute implements Attribute<EnclosingMethod
         output.writeInt(4);
         output.writeShort(value.getClassIndex());
         output.writeShort(value.getMethodIndex());
-    });
+    }, Skip.u32());
     private final int classIndex;
     private final int methodIndex;
 

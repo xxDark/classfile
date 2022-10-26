@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +18,7 @@ public final class SourceFileAttribute implements Attribute<SourceFileAttribute>
     }, (output, value) -> {
         output.writeInt(2);
         output.writeShort(value.sourceFileIndex());
-    });
+    }, Skip.u32());
 
     private final int sourceFileIndex;
 

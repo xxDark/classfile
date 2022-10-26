@@ -43,6 +43,21 @@ public final class AppendFrame extends StackMapFrame<AppendFrame> {
             output.writeByte(type.tag());
             ((Codec) type.codec()).write(output, info);
         }
+    }, input -> {
+        int type = input.readUnsignedByte();
+        if (!FrameTypeRange.CHOP.includes(type)) {
+            throw new InvalidAttributeException("Tag mismatch");
+        }
+        input.skipBytes(2);
+        int verificationTypeCount = type - 251;
+        while (verificationTypeCount-- != 0) {
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            verificationType.codec().skip(input);
+        }
     });
 
     private final int tag;

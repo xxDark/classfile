@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class ConstantethodHandle implements ConstantEntry<ConstantethodHan
     }, (output, value) -> {
         output.writeByte(value.referenceKind());
         output.writeShort(value.referenceIndex());
-    });
+    }, Skip.exact(3));
 
     private final int referenceKind;
     private final int referenceIndex;

@@ -99,6 +99,6 @@ public final class AttributeInfo<T extends Attribute<T>> {
     }
 
     private static <T extends Attribute<T>> AttributeInfo<T> info(Codec<T> codec, KnownInfo knownInfo) {
-        return info(codec.asContextAware(), knownInfo);
+        return info(codec.contextAwareCodec(), knownInfo);
     }
 }

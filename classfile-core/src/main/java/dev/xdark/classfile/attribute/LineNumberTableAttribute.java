@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public final class LineNumberTableAttribute implements Attribute<LineNumberTable
         List<LineNumber> lineNumbers = value.getLineNumbers();
         output.writeInt((lineNumbers.size() + 1) * 2);
         AttributeUtil.writeList(output, lineNumbers, LineNumber.CODEC);
-    });
+    }, Skip.u32());
     private final List<LineNumber> lineNumbers;
 
     /**
@@ -53,7 +54,7 @@ public final class LineNumberTableAttribute implements Attribute<LineNumberTable
         }, (output, value) -> {
             output.writeShort(value.getInstruction());
             output.writeShort(value.getLine());
-        });
+        }, Skip.exact(4));
         private final int instruction;
         private final int line;
 

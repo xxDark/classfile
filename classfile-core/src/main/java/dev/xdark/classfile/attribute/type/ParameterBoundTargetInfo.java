@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,9 +13,10 @@ public final class ParameterBoundTargetInfo implements TargetInfo<ParameterBound
     static final Codec<ParameterBoundTargetInfo> CODEC = Codec.of(input -> {
         return new ParameterBoundTargetInfo(TargetType.require(input), input.readUnsignedByte(), input.readUnsignedByte());
     }, (output, value) -> {
+        output.writeByte(value.type().kind());
         output.writeByte(value.getParameterIndex());
         output.writeByte(value.getBoundIndex());
-    });
+    }, Skip.exact(3));
     private final TargetType<ParameterBoundTargetInfo> type;
     private final int parameterIndex;
     private final int boundIndex;

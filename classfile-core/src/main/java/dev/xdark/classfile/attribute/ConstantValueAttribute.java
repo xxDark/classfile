@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +18,7 @@ public final class ConstantValueAttribute implements Attribute<ConstantValueAttr
     }, (output, value) -> {
         output.writeShort(2);
         output.writeShort(value.getIndex());
-    });
+    }, Skip.u32());
     private final int index;
 
     /**

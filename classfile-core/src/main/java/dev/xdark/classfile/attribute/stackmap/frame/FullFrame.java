@@ -4,6 +4,7 @@ import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.attribute.stackmap.type.VerificationType;
 import dev.xdark.classfile.attribute.stackmap.type.VerificationTypeInfo;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,26 @@ public final class FullFrame extends StackMapFrame<FullFrame> {
             output.writeByte(type.tag());
             ((Codec) type.codec()).write(output, info);
         }
-    });
+    }, Skip.exact(3).then(input -> {
+        int numberOfLocals = input.readUnsignedShort();
+        while (numberOfLocals-- != 0) {
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            verificationType.codec().skip(input);
+        }
+        int numberOfStack = input.readUnsignedShort();
+        while (numberOfStack-- != 0) {
+            int tag = input.readUnsignedByte();
+            VerificationType<?> verificationType = VerificationType.of(tag);
+            if (verificationType == null) {
+                throw new InvalidAttributeException("Unknown verification type " + tag);
+            }
+            verificationType.codec().skip(input);
+        }
+    }));
 
     private final List<VerificationTypeInfo<?>> locals;
     private final List<VerificationTypeInfo<?>> stack;

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.stackmap.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Uninitialized_variable_info.
@@ -12,7 +13,7 @@ public final class UninitializedVariableVerificationTypeInfo implements Verifica
         return new UninitializedVariableVerificationTypeInfo(input.readUnsignedShort());
     }, (output, value) -> {
         output.writeShort(value.getInstructionOffset());
-    });
+    }, Skip.exact(2));
     private final int instructionOffset;
 
     /**

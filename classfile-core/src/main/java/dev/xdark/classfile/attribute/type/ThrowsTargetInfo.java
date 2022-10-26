@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,7 +16,7 @@ public final class ThrowsTargetInfo implements TargetInfo<ThrowsTargetInfo> {
     }, (output, value) -> {
         output.writeByte(TargetType.THROWS.kind());
         output.writeByte(value.getIndex());
-    });
+    }, Skip.exact(2));
     private final int index;
 
     /**

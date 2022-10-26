@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ public final class ConstantFloat implements ConstantEntry<ConstantFloat>, ValueE
         return new ConstantFloat(input.readFloat());
     }, (output, value) -> {
         output.writeFloat(value.value());
-    });
+    }, Skip.exact(4));
 
     private final float value;
 

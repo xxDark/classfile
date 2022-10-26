@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,10 +11,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class FormalParameterTargetInfo implements TargetInfo<FormalParameterTargetInfo> {
     static final Codec<FormalParameterTargetInfo> CODEC = Codec.of(input -> {
+        input.skipBytes(1);
         return new FormalParameterTargetInfo(input.readUnsignedByte());
     }, (output, value) -> {
+        output.writeByte(TargetType.FORMAL_PARAMETER.kind());
         output.writeByte(value.getIndex());
-    });
+    }, Skip.exact(2));
     private final int index;
 
     /**

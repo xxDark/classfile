@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Instruction with two unsigned short operands.
@@ -14,7 +15,7 @@ public final class TwoUnsignedShortInstruction extends AbstractInstruction<TwoUn
         output.writeByte(value.getOpcode().opcode());
         output.writeShort(value.getFirstOperand());
         output.writeShort(value.getSecondOperand());
-    });
+    }, Skip.exact(5));
     private final int firstOperand, secondOperand;
 
     /**

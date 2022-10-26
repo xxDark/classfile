@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.ClassContext;
 import dev.xdark.classfile.io.ContextCodec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public final class RecordAttribute implements Attribute<RecordAttribute> {
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
-    });
+    }, Skip.u32().contextAwareSkip());
     private final List<RecordComponent> components;
 
     /**
@@ -69,7 +70,7 @@ public final class RecordAttribute implements Attribute<RecordAttribute> {
                 NamedAttributeInstance<?> attr = attributes.get(i);
                 AttributeIO.write(output, attr.getNameIndex(), ctx, attr.getAttribute());
             }
-        });
+        }, Skip.exact(2).then(AttributeIO::skip).contextAwareSkip());
         private final int nameIndex;
         private final int descriptorIndex;
         private final List<NamedAttributeInstance<?>> attributes;

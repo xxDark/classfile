@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ public final class ConstantUtf8 implements ConstantEntry<ConstantUtf8>, ValueEnt
         return new ConstantUtf8(input.readUTF());
     }, (output, value) -> {
         output.writeUTF(value.value());
-    });
+    }, Skip.exact(2));
 
     private final String value;
 

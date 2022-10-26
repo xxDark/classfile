@@ -1,6 +1,7 @@
 package dev.xdark.classfile.annotation;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.function.IntFunction;
 
@@ -32,6 +33,6 @@ public abstract class ElementValueConstant<T extends ElementValueConstant<T>> im
             return fn.apply(input.readUnsignedShort());
         }, (output, value) -> {
             output.writeShort(value.getIndex());
-        });
+        }, Skip.exact(2));
     }
 }

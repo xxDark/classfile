@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Instruction with a single, signed byte operand.
@@ -13,7 +14,7 @@ public final class UnsignedByteInstruction extends AbstractInstruction<UnsignedB
     }, (output, value) -> {
         output.writeByte(value.getOpcode().opcode());
         output.writeByte(value.getOperand());
-    });
+    }, Skip.exact(2));
     private final int operand;
 
     public UnsignedByteInstruction(Opcode<UnsignedByteInstruction> opcode, int operand) {

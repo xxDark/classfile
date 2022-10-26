@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute.stackmap.frame;
 
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Same locals as the previous frame, the stack is empty.
@@ -18,7 +19,8 @@ public final class SameExtendedFrame extends StackMapFrame<SameExtendedFrame> {
         return new SameExtendedFrame(input.readUnsignedShort());
     }, (output, value) -> {
         output.writeByte(value.getType());
-    });
+        output.writeShort(value.getOffsetDelta());
+    }, Skip.exact(3));
 
     /**
      * @param offsetDelta Offset delta.

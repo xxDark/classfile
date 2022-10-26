@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ public final class ConstantLong implements ConstantEntry<ConstantLong>, ValueEnt
         return new ConstantLong(input.readLong());
     }, (output, value) -> {
         output.writeLong(value.value());
-    });
+    }, Skip.exact(8));
 
     private final long value;
 

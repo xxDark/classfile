@@ -1,6 +1,7 @@
 package dev.xdark.classfile.annotation;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,7 +44,18 @@ public final class ElementValueAnnotation implements ElementValue<ElementValueAn
             output.writeByte(type.tag());
             ((Codec) type.codec()).write(output, v);
         }
-    });
+    }, Skip.exact(2).then(input -> {
+        int pairCount = input.readUnsignedShort();
+        for (int i = 0; i < pairCount; i++) {
+            input.skipBytes(2);
+            int tag = input.readUnsignedByte();
+            ElementType<?> type = ElementType.of(tag);
+            if (type == null) {
+                throw new InvalidAnnotationException("Unknown tag " + (char) tag);
+            }
+            type.codec().skip(input);
+        }
+    }));
 
     private final int classIndex;
     private final int[] nameIndices;

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class EmptyTargetInfo implements TargetInfo<EmptyTargetInfo> {
         return new EmptyTargetInfo(TargetType.require(input));
     }, (output, value) -> {
         output.writeByte(value.type().kind());
-    });
+    }, Skip.exact(1));
 
     /**
      * @param type Target type.

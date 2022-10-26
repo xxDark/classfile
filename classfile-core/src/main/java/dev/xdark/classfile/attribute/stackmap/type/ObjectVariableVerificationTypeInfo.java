@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.stackmap.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Object_variable_info.
@@ -12,7 +13,7 @@ public final class ObjectVariableVerificationTypeInfo implements VerificationTyp
         return new ObjectVariableVerificationTypeInfo(input.readUnsignedShort());
     }, (output, value) -> {
         output.writeShort(value.getClassIndex());
-    });
+    }, Skip.exact(2));
     private final int classIndex;
 
     /**

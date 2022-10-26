@@ -1,9 +1,9 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ public final class InnerClassesAttribute implements Attribute<InnerClassesAttrib
         int size = innerClasses.size();
         output.writeInt(size * 8 + 2);
         AttributeUtil.writeList(output, innerClasses, InnerClass.CODEC);
-    });
+    }, Skip.u32());
     private final List<InnerClass> innerClasses;
 
     /**
@@ -54,7 +54,7 @@ public final class InnerClassesAttribute implements Attribute<InnerClassesAttrib
             output.writeShort(value.getOuterClassIndex());
             output.writeShort(value.getInnerNameIndex());
             output.writeShort(value.getInnerClassAccessFlags());
-        });
+        }, Skip.exact(8));
         private final int innerClassIndex;
         private final int outerClassIndex;
         private final int innerNameIndex;

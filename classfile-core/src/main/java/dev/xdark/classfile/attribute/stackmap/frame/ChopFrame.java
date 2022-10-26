@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute.stackmap.frame;
 
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Same locals as the previous frame except K locals are absent, the stack is empty.
@@ -20,7 +21,7 @@ public final class ChopFrame extends StackMapFrame<ChopFrame> {
     }, (output, value) -> {
         output.writeByte(value.getType());
         output.writeShort(value.getOffsetDelta());
-    });
+    }, Skip.exact(3));
 
     private final int type;
 

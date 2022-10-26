@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ public final class ConstantDouble implements ConstantEntry<ConstantDouble>, Valu
         return new ConstantDouble(input.readDouble());
     }, (output, value) -> {
         output.writeDouble(value.value());
-    });
+    }, Skip.exact(8));
 
     private final double value;
 

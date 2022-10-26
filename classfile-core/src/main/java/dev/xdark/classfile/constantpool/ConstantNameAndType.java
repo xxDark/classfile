@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class ConstantNameAndType implements ConstantEntry<ConstantNameAndT
     }, (output, value) -> {
         output.writeShort(value.nameIndex());
         output.writeShort(value.typeIndex());
-    });
+    }, Skip.exact(4));
 
     private final int nameIndex;
     private final int typeIndex;

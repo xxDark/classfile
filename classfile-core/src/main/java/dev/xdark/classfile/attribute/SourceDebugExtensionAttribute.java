@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +17,7 @@ public final class SourceDebugExtensionAttribute implements Attribute<SourceDebu
         byte[] extension = value.getExtension();
         output.writeInt(extension.length);
         output.write(extension);
-    });
+    }, Skip.u32());
     private final byte[] extension;
 
     /**

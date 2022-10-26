@@ -4,6 +4,9 @@ import dev.xdark.classfile.annotation.ElementType;
 import dev.xdark.classfile.annotation.ElementValueAnnotation;
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Input;
+
+import java.io.IOException;
 
 /**
  * Type annotation.
@@ -12,13 +15,7 @@ import dev.xdark.classfile.io.Codec;
  */
 public final class TypeAnnotation {
     public static final Codec<TypeAnnotation> CODEC = Codec.of(input -> {
-        int position = input.position();
-        int kind = input.readUnsignedByte();
-        TargetType<?> type = TargetType.of(kind);
-        if (type == null) {
-            throw new InvalidAttributeException("Unknown target type " + kind);
-        }
-        input.position(position);
+        TargetType<?> type = readTargetType(input);
         TargetInfo<?> info = type.codec().read(input);
         TypePath path = TypePath.CODEC.read(input);
         ElementValueAnnotation annotation = ElementType.ANNOTATION.codec().read(input);
@@ -30,7 +27,13 @@ public final class TypeAnnotation {
         ((Codec) type.codec()).write(output, info);
         TypePath.CODEC.write(output, value.getTypePath());
         ElementType.ANNOTATION.codec().write(output, value.getAnnotation());
+    }, input -> {
+        TargetType<?> type = readTargetType(input);
+        type.codec().skip(input);
+        TypePath.CODEC.skip(input);
+        ElementType.ANNOTATION.codec().skip(input);
     });
+
     private final TargetInfo<?> info;
     private final TypePath typePath;
     private final ElementValueAnnotation annotation;
@@ -65,5 +68,16 @@ public final class TypeAnnotation {
      */
     public ElementValueAnnotation getAnnotation() {
         return annotation;
+    }
+
+    private static TargetType<?> readTargetType(Input input) throws IOException {
+        int position = input.position();
+        int kind = input.readUnsignedByte();
+        TargetType<?> type = TargetType.of(kind);
+        if (type == null) {
+            throw new InvalidAttributeException("Unknown target type " + kind);
+        }
+        input.position(position);
+        return type;
     }
 }

@@ -2,6 +2,7 @@ package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.attribute.InvalidAttributeException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public final class TypePath {
         for (int i = 0; i < count; i++) {
             Path.CODEC.write(output, paths.get(i));
         }
+    }, input -> {
+        for (int i = 0, j = input.readUnsignedByte(); i < j; i++) {
+            Path.CODEC.skip(input);
+        }
     });
     private final List<Path> paths;
 
@@ -52,7 +57,7 @@ public final class TypePath {
         }, (output, value) -> {
             output.writeByte(value.getKind());
             output.writeByte(value.getIndex());
-        });
+        }, Skip.exact(2));
         private final int kind;
         private final int index;
 

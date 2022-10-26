@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public final class MethodParametersAttribute implements Attribute<MethodParamete
         List<Parameter> parameters = value.getParameters();
         output.writeInt(2 + parameters.size() * 4);
         AttributeUtil.writeList(output, parameters, Parameter.CODEC);
-    });
+    }, Skip.u32());
     private final List<Parameter> parameters;
 
     /**
@@ -51,7 +52,7 @@ public final class MethodParametersAttribute implements Attribute<MethodParamete
         }, (output, value) -> {
             output.writeShort(value.getNameIndex());
             output.writeShort(value.getFlags());
-        });
+        }, Skip.exact(4));
         private final int nameIndex;
         private final int flags;
 

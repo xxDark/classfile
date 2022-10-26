@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,7 +24,7 @@ public final class ModulePackagesAttribute implements Attribute<ModulePackagesAt
         int[] packages = value.getPackages();
         output.writeShort((packages.length + 1) * 2);
         AttributeUtil.writeUnsignedShorts(output, packages);
-    });
+    }, Skip.u32());
     private final int[] packages;
 
     /**

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class ConstantInvokeDynamic implements ConstantEntry<ConstantInvoke
     }, (output, value) -> {
         output.writeShort(value.bootstrapMethodIndex());
         output.writeShort(value.nameAndTypeIndex());
-    });
+    }, Skip.exact(4));
 
     private final int bootstrapMethodIndex;
     private final int nameAndTypeIndex;

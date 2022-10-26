@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * Instruction with a single, signed short operand.
@@ -13,7 +14,7 @@ public final class SignedShortInstruction extends AbstractInstruction<SignedShor
     }, (output, value) -> {
         output.writeByte(value.getOpcode().opcode());
         output.writeShort(value.getOperand());
-    });
+    }, Skip.exact(3));
     private final int operand;
 
     public SignedShortInstruction(Opcode<SignedShortInstruction> opcode, int operand) {

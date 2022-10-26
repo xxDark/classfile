@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,8 +13,9 @@ public final class ParameterTargetInfo implements TargetInfo<ParameterTargetInfo
     static final Codec<ParameterTargetInfo> CODEC = Codec.of(input -> {
         return new ParameterTargetInfo(TargetType.require(input), input.readUnsignedByte());
     }, (output, value) -> {
+        output.writeByte(value.type().kind());
         output.writeByte(value.getIndex());
-    });
+    }, Skip.exact(2));
     private final TargetType<ParameterTargetInfo> type;
     private final int index;
 

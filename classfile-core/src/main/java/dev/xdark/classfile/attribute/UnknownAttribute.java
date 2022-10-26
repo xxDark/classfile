@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,7 +16,7 @@ public final class UnknownAttribute implements Attribute<UnknownAttribute> {
         byte[] content = value.getData();
         output.writeInt(content.length);
         output.write(content);
-    });
+    }, Skip.u32());
 
     private final byte[] data;
 

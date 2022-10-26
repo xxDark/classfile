@@ -1,4 +1,5 @@
 rootProject.name = 'classfile'
 include 'classfile-core'
 include 'classfile-tree'
+include 'classfile-patcher'
 

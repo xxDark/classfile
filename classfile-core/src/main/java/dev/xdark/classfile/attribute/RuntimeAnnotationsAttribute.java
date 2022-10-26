@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute;
 import dev.xdark.classfile.annotation.ElementType;
 import dev.xdark.classfile.annotation.ElementValueAnnotation;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.List;
 import java.util.function.Function;
@@ -43,6 +44,6 @@ public abstract class RuntimeAnnotationsAttribute<SELF extends RuntimeAnnotation
             int newPosition = output.position();
             output.position(position).writeInt(newPosition - position - 4);
             output.position(newPosition);
-        });
+        }, Skip.u32());
     }
 }

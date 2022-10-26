@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.ClassContext;
+import dev.xdark.classfile.io.Skip;
 import dev.xdark.classfile.opcode.Label;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
@@ -59,7 +60,7 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
-    });
+    }, Skip.u32().contextAwareSkip());
     private final int maxStack;
     private final int maxLocals;
     private final byte[] code;
@@ -129,7 +130,7 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
             output.writeShort(value.getEnd().getPosition());
             output.writeShort(value.getHandler().getPosition());
             output.writeShort(value.getTypeIndex());
-        });
+        }, Skip.exact(8));
         private final Label start;
         private final Label end;
         private final Label handler;

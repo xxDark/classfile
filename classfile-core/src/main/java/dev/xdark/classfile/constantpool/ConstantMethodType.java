@@ -1,6 +1,7 @@
 package dev.xdark.classfile.constantpool;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +14,7 @@ public final class ConstantMethodType implements ConstantEntry<ConstantMethodTyp
         return new ConstantMethodType(input.readUnsignedShort());
     }, (output, value) -> {
         output.writeShort(value.descriptorIndex());
-    });
+    }, Skip.exact(2));
     private final int descriptorIndex;
 
     /**

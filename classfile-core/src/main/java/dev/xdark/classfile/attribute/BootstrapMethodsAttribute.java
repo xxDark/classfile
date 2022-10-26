@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public final class BootstrapMethodsAttribute implements Attribute<BootstrapMetho
         int count = bootstrapMethods.size();
         output.writeInt(2 + count * 6);
         AttributeUtil.writeList(output, bootstrapMethods, BootstrapMethod.CODEC);
-    });
+    }, Skip.u32());
 
     private final List<BootstrapMethod> bootstrapMethods;
 
@@ -63,7 +64,7 @@ public final class BootstrapMethodsAttribute implements Attribute<BootstrapMetho
             output.writeShort(value.getReferenceIndex());
             int[] indices = value.getArgumentIndices();
             AttributeUtil.writeUnsignedShorts(output, indices);
-        });
+        }, Skip.exact(4).then(Skip.u16Array(Skip.LengthSkip.u16())));
         private final int referenceIndex;
         private final int[] argumentIndices;
 

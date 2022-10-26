@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute;
 import dev.xdark.classfile.annotation.ElementType;
 import dev.xdark.classfile.annotation.ElementValueAnnotation;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 import java.util.List;
 import java.util.function.Function;
@@ -47,7 +48,7 @@ public abstract class RuntimeParameterAnnotationsAttribute<SELF extends RuntimeP
             int newPosition = output.position();
             output.position(position).writeInt(newPosition - position - 4);
             output.position(newPosition);
-        });
+        }, Skip.u32());
     }
 
     public static final class ParameterAnnotations {
@@ -55,6 +56,10 @@ public abstract class RuntimeParameterAnnotationsAttribute<SELF extends RuntimeP
             return new ParameterAnnotations(AttributeUtil.readList(input, ElementType.ANNOTATION.codec()));
         }, (output, value) -> {
             AttributeUtil.writeList(output, value.getAnnotations(), ElementType.ANNOTATION.codec());
+        }, input -> {
+            for (int i = 0, j = input.readUnsignedShort(); i < j; i++) {
+                ElementType.ANNOTATION.codec().skip(input);
+            }
         });
         private final List<ElementValueAnnotation> annotations;
 

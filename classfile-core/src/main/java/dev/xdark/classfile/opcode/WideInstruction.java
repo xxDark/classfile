@@ -61,6 +61,29 @@ public final class WideInstruction extends AbstractInstruction<WideInstruction> 
             default:
                 throw new InvalidClassException("Unknown wide instruction type " + opcode);
         }
+    }, input -> {
+        input.skipBytes(1);
+        int opcode = input.readUnsignedByte();
+        switch (opcode) {
+            case ILOAD:
+            case FLOAD:
+            case ALOAD:
+            case LLOAD:
+            case DLOAD:
+            case ISTORE:
+            case FSTORE:
+            case ASTORE:
+            case LSTORE:
+            case DSTORE:
+            case RET:
+                input.skipBytes(2);
+                break;
+            case IINC:
+                input.skipBytes(4);
+                break;
+            default:
+                throw new InvalidClassException("Unknown wide instruction type " + opcode);
+        }
     });
     private final int opcode;
     private final int operand;

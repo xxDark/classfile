@@ -1,6 +1,7 @@
 package dev.xdark.classfile.annotation;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class ElementValueEnum implements ElementValue<ElementValueEnum> {
     }, (output, value) -> {
         output.writeShort(value.getClassIndex());
         output.writeShort(value.getNameIndex());
-    });
+    }, Skip.exact(4));
     private final int classIndex;
     private final int nameIndex;
 

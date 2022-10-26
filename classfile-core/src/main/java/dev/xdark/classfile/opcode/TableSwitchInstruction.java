@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public final class TableSwitchInstruction
         return new TableSwitchInstruction(low, high, dflt, offsets);
     }, (output, value) -> {
         int bytecodePosition = output.position();
-        output.writeByte(value.getOpcode().opcode());
+        output.writeByte(Opcode.TABLE_SWITCH.opcode());
         int pos = output.position();
         output.position(pos + (4 - pos & 3));
         value.getDefault().write(bytecodePosition, output, true);
@@ -40,7 +41,12 @@ public final class TableSwitchInstruction
         for (Label offset : offsets) {
             offset.write(bytecodePosition, output, true);
         }
-    });
+    }, Skip.exact(1).then(input -> {
+        int pos = input.position();
+        input.position(pos + (4 - pos & 3));
+        input.skipBytes(12);
+        input.skipBytes(input.readInt() * 4);
+    }));
     private final int low;
     private final int high;
     private final Label dflt;

@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,7 +22,7 @@ public final class NestMembersAttribute implements Attribute<NestMembersAttribut
         int[] classes = value.getClasses();
         output.writeInt((classes.length + 1) * 2);
         AttributeUtil.writeUnsignedShorts(output, classes);
-    });
+    }, Skip.u32());
     private final int[] classes;
 
     /**

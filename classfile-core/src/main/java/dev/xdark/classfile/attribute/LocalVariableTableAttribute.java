@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public final class LocalVariableTableAttribute implements Attribute<LocalVariabl
         List<LocalVariable> localVariables = value.getLocalVariables();
         output.writeInt(2 + localVariables.size() * 10);
         AttributeUtil.writeList(output, localVariables, LocalVariable.CODEC);
-    });
+    }, Skip.u32());
     private final List<LocalVariable> localVariables;
 
     /**
@@ -56,7 +57,7 @@ public final class LocalVariableTableAttribute implements Attribute<LocalVariabl
             output.writeShort(value.getNameIndex());
             output.writeShort(value.getDescriptorIndex());
             output.writeShort(value.getIndex());
-        });
+        }, Skip.exact(10));
         private final int instruction;
         private final int length;
         private final int nameIndex;

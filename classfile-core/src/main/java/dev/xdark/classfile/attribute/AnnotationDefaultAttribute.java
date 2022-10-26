@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute;
 import dev.xdark.classfile.annotation.ElementType;
 import dev.xdark.classfile.annotation.ElementValue;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,7 +33,7 @@ public final class AnnotationDefaultAttribute implements Attribute<AnnotationDef
         int newPosition = output.position();
         output.position(position).writeInt(newPosition - position - 4);
         output.position(newPosition);
-    });
+    }, Skip.u32());
     private final ElementValue<?> value;
 
     /**

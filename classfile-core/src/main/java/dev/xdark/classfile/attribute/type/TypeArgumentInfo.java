@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute.type;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public final class TypeArgumentInfo implements TargetInfo<TypeArgumentInfo> {
     }, (output, value) -> {
         output.writeShort(value.getOffset());
         output.writeByte(value.getIndex());
-    });
+    }, Skip.exact(3));
     private final TargetType<TypeArgumentInfo> type;
     private final int offset;
     private final int index;

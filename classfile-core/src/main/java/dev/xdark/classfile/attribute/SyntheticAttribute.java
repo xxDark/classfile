@@ -1,6 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +18,7 @@ public final class SyntheticAttribute implements Attribute<SyntheticAttribute> {
         return INSTANCE;
     }, (output, value) -> {
         output.writeInt(0);
-    });
+    }, Skip.u32());
 
     @Override
     public @NotNull AttributeInfo<SyntheticAttribute> info() {

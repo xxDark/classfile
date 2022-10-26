@@ -32,6 +32,16 @@ public final class ElementValueArray implements ElementValue<ElementValueArray> 
             output.writeByte(type.tag());
             ((Codec) type.codec()).write(output, v);
         }
+    }, input -> {
+        int count = input.readUnsignedShort();
+        for (int i = 0; i < count; i++) {
+            int tag = input.readUnsignedByte();
+            ElementType<?> type = ElementType.of(tag);
+            if (type == null) {
+                throw new InvalidAnnotationException("Unknown tag " + (char) tag);
+            }
+            type.codec().skip(input);
+        }
     });
     private final ElementValue<?>[] values;
 

@@ -2,6 +2,7 @@ package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.InvalidClassException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public final class LookupSwitchInstruction
         return new LookupSwitchInstruction(keys, labels, dflt);
     }, (output, value) -> {
         int bytecodePosition = output.position();
-        output.writeByte(value.getOpcode().opcode());
+        output.writeByte(Opcode.LOOKUP_SWITCH.opcode());
         int pos = output.position();
         output.position(pos + (4 - pos & 3));
         value.getDefault().write(bytecodePosition, output, true);
@@ -46,7 +47,12 @@ public final class LookupSwitchInstruction
             output.writeInt(keys[i]);
             labels[i].write(bytecodePosition, output, true);
         }
-    });
+    }, Skip.exact(1).then(input -> {
+        int pos = input.position();
+        input.position(pos + (4 - pos & 3));
+        input.skipBytes(4);
+        input.skipBytes(input.readInt() * 8);
+    }));
 
     private final int[] keys;
     private final Label[] labels;

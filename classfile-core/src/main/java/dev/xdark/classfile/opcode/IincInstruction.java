@@ -1,6 +1,7 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Skip;
 
 /**
  * iinc.
@@ -15,7 +16,7 @@ public final class IincInstruction extends AbstractInstruction<IincInstruction> 
         output.writeByte(Opcode.IINC.opcode());
         output.writeByte(value.getIndex());
         output.writeByte(value.getValue());
-    });
+    }, Skip.exact(3));
     private final int index;
     private final int value;
 
