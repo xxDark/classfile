@@ -9,7 +9,7 @@ import dev.xdark.classfile.io.Codec;
  */
 public final class UnsignedByteInstruction extends AbstractInstruction<UnsignedByteInstruction> {
     static final Codec<UnsignedByteInstruction> CODEC = Codec.of(input -> {
-        return new UnsignedByteInstruction(Opcode.require(input.readUnsignedByte()), input.readUnsignedByte());
+        return new UnsignedByteInstruction(Opcode.require(input), input.readUnsignedByte());
     }, (output, value) -> {
         output.writeByte(value.getOpcode().opcode());
         output.writeByte(value.getOperand());

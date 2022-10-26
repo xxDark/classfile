@@ -1,7 +1,7 @@
 package dev.xdark.classfile.attribute;
 
 import dev.xdark.classfile.ClassContext;
-import dev.xdark.classfile.attribute.code.Label;
+import dev.xdark.classfile.opcode.Label;
 import dev.xdark.classfile.io.Codec;
 import dev.xdark.classfile.io.ContextCodec;
 import dev.xdark.classfile.ClassVersion;
@@ -123,7 +123,7 @@ public final class CodeAttribute implements Attribute<CodeAttribute> {
 
     public static final class TryCatchBlock {
         public static final Codec<TryCatchBlock> CODEC = Codec.of(input -> {
-            return new TryCatchBlock(Label.exact(input.readUnsignedShort()), Label.exact(input.readUnsignedShort()), Label.exact(input.readUnsignedShort()), input.readUnsignedShort());
+            return new TryCatchBlock(new Label(input.readUnsignedShort()), new Label(input.readUnsignedShort()), new Label(input.readUnsignedShort()), input.readUnsignedShort());
         }, (output, value) -> {
             output.writeShort(value.getStart().getPosition());
             output.writeShort(value.getEnd().getPosition());

@@ -96,6 +96,7 @@ public final class CodeBuilder implements CodeVisitor {
 
     @Override
     public void visitEnd() {
+        if (false)
         for (FlowPoint point : flow) {
             int position = point.position;
             FlowInstruction insn = point.instruction;

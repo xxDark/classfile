@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author xDark
  */
-public abstract class FilterAttributeVisitor implements AttributeVisitor {
+public class FilterAttributeVisitor implements AttributeVisitor {
     @Nullable
     protected AttributeVisitor av;
 

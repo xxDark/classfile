@@ -2,6 +2,7 @@ package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.InvalidClassException;
 import dev.xdark.classfile.io.Codec;
+import dev.xdark.classfile.io.Input;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -107,7 +108,7 @@ public final class Opcode<T extends Instruction<T>> {
     public static final Opcode<EmptyInstruction> POP = empty("pop", JvmOpcodes.POP);
     public static final Opcode<EmptyInstruction> POP2 = empty("pop2", JvmOpcodes.POP2);
     public static final Opcode<EmptyInstruction> DUP = empty("dup", JvmOpcodes.DUP);
-    public static final Opcode<EmptyInstruction> DUP_X1 = empty("dup)x1", JvmOpcodes.DUP_X1);
+    public static final Opcode<EmptyInstruction> DUP_X1 = empty("dup_x1", JvmOpcodes.DUP_X1);
     public static final Opcode<EmptyInstruction> DUP_X2 = empty("dup_x2", JvmOpcodes.DUP_X2);
     public static final Opcode<EmptyInstruction> DUP2 = empty("dup2", JvmOpcodes.DUP2);
     public static final Opcode<EmptyInstruction> DUP2_X1 = empty("dup2_x1", JvmOpcodes.DUP2_X1);
@@ -280,7 +281,8 @@ public final class Opcode<T extends Instruction<T>> {
         return codec;
     }
 
-    static <T extends Instruction<T>> Opcode<T> require(int n) throws IOException {
+    static <T extends Instruction<T>> Opcode<T> require(Input input) throws IOException {
+        int n = input.readUnsignedByte();
         Opcode<T> opcode = (Opcode<T>) of(n);
         if (opcode == null) {
             throw new InvalidClassException("Unknown opcode " + n);

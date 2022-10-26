@@ -3,11 +3,11 @@ package dev.xdark.classfile;
 import dev.xdark.classfile.attribute.AttributeAdapter;
 import dev.xdark.classfile.attribute.code.CodeAdapter;
 import dev.xdark.classfile.attribute.code.CodeBuilder;
-import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.constantpool.ConstantPoolBuilder;
 import dev.xdark.classfile.io.buffer.ByteBufferAllocator;
 import dev.xdark.classfile.io.buffer.ByteBufferOutput;
 import dev.xdark.classfile.method.MethodAdapter;
+import dev.xdark.classfile.opcode.Label;
 import dev.xdark.classfile.opcode.Opcode;
 import org.junit.jupiter.api.Test;
 

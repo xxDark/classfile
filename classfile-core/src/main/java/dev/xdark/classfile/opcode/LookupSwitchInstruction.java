@@ -1,7 +1,6 @@
 package dev.xdark.classfile.opcode;
 
 import dev.xdark.classfile.InvalidClassException;
-import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.io.Codec;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,23 +16,25 @@ public final class LookupSwitchInstruction
         extends AbstractInstruction<LookupSwitchInstruction>
         implements FlowInstruction {
     static final Codec<LookupSwitchInstruction> CODEC = Codec.of(input -> {
+        int bytecodePosition = input.position();
         input.skipBytes(1);
         int pos = input.position();
-        input.skipBytes(pos + (4 - pos & 3));
-        Label dflt = Label.create(input.position(), input.readInt());
+        input.skipBytes(4 - pos & 3);
+        Label dflt = new Label(bytecodePosition + input.readInt());
         int count = input.readInt();
         int[] keys = new int[count];
         Label[] labels = new Label[count];
         for (int i = 0; i < count; i++) {
             keys[i] = input.readInt();
-            labels[i] = Label.create(input.position(), input.readInt());
+            labels[i] = new Label(bytecodePosition + input.readInt());
         }
         return new LookupSwitchInstruction(keys, labels, dflt);
     }, (output, value) -> {
+        int bytecodePosition = output.position();
         output.writeByte(value.getOpcode().opcode());
         int pos = output.position();
         output.position(pos + (4 - pos & 3));
-        output.writeInt(value.getDefault().getOffset());
+        value.getDefault().write(bytecodePosition, output, true);
         int[] keys = value.getKeys();
         Label[] labels = value.getLabels();
         int count = keys.length;
@@ -43,7 +44,7 @@ public final class LookupSwitchInstruction
         output.writeInt(count);
         for (int i = 0; i < count; i++) {
             output.writeInt(keys[i]);
-            output.writeInt(labels[i].getOffset());
+            labels[i].write(bytecodePosition, output, true);
         }
     });
 

@@ -1,6 +1,5 @@
 package dev.xdark.classfile.opcode;
 
-import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.io.Codec;
 
 /**
@@ -11,10 +10,12 @@ import dev.xdark.classfile.io.Codec;
  */
 public final class ShortJumpInstruction extends JumpInstruction<ShortJumpInstruction> {
     static final Codec<ShortJumpInstruction> CODEC = Codec.of(input -> {
-        return new ShortJumpInstruction(Opcode.require(input.readUnsignedByte()), Label.offset(input.readUnsignedShort()));
+        int bytecodePosition = input.position();
+        return new ShortJumpInstruction(Opcode.require(input), new Label(bytecodePosition + input.readShort()));
     }, (output, value) -> {
+        int bytecodePosition = output.position();
         output.writeByte(value.getOpcode().opcode());
-        output.writeShort(value.getLabel().getOffset());
+        value.getLabel().write(bytecodePosition, output, false);
     });
 
     public ShortJumpInstruction(Opcode<ShortJumpInstruction> opcode, Label offset) {

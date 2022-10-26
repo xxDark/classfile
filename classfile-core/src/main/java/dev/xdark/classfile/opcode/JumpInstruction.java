@@ -1,6 +1,5 @@
 package dev.xdark.classfile.opcode;
 
-import dev.xdark.classfile.attribute.code.Label;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

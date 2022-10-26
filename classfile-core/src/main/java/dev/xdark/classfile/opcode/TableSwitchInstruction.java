@@ -1,6 +1,5 @@
 package dev.xdark.classfile.opcode;
 
-import dev.xdark.classfile.attribute.code.Label;
 import dev.xdark.classfile.io.Codec;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,28 +15,30 @@ public final class TableSwitchInstruction
         extends AbstractInstruction<TableSwitchInstruction>
         implements FlowInstruction {
     static final Codec<TableSwitchInstruction> CODEC = Codec.of(input -> {
+        int bytecodePosition = input.position();
         input.skipBytes(1);
         int pos = input.position();
-        input.skipBytes(pos + (4 - pos & 3));
-        Label dflt = Label.create(input.position(), input.readInt());
+        input.skipBytes(4 - pos & 3);
+        Label dflt = new Label(bytecodePosition + input.readInt());
         int low = input.readInt();
         int high = input.readInt();
         Label[] offsets = new Label[high - low + 1];
         for (int i = 0, j = offsets.length; i < j; i++) {
-            offsets[i] = Label.create(input.position(), input.readInt());
+            offsets[i] = new Label(bytecodePosition + input.readInt());
         }
         return new TableSwitchInstruction(low, high, dflt, offsets);
     }, (output, value) -> {
+        int bytecodePosition = output.position();
         output.writeByte(value.getOpcode().opcode());
         int pos = output.position();
         output.position(pos + (4 - pos & 3));
-        output.writeInt(value.getDefault().getOffset());
+        value.getDefault().write(bytecodePosition, output, true);
         output.writeInt(value.getLow());
         output.writeInt(value.getHigh());
         Label[] offsets = value.getLabels();
         output.writeInt(offsets.length);
         for (Label offset : offsets) {
-            output.writeInt(offset.getOffset());
+            offset.write(bytecodePosition, output, true);
         }
     });
     private final int low;

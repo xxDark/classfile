@@ -3,6 +3,7 @@ package dev.xdark.classfile.attribute.code;
 import dev.xdark.classfile.attribute.AttributeVisitor;
 import dev.xdark.classfile.attribute.CodeAttribute;
 import dev.xdark.classfile.opcode.Instruction;
+import dev.xdark.classfile.opcode.Label;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
